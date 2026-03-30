@@ -1,0 +1,7 @@
+{
+  "name": "score-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "@supabase/supabase-js": "latest"
+  }
+}
