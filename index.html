@@ -372,3 +372,288 @@
       <div class="result-score" style="font-size:1.5rem"><span id="r-ams-score">0</span>点</div>
       <div id="r-ams-judge" class="result-judge">-</div>
     </div>
+    <hr class="divider">
+    <div class="result-section">
+      <div class="result-title">✅ ADAMスコア</div>
+      <div id="r-adam-judge" class="result-judge" style="font-size:1rem;margin-top:4px;">-</div>
+    </div>
+    <hr class="divider">
+    <div class="result-section">
+      <div class="result-title">🔬 q-PADスコア</div>
+      <div class="result-score" style="font-size:1.5rem"><span id="r-qpad-score">0</span>点</div>
+      <div id="r-qpad-judge" class="result-judge">-</div>
+    </div>
+    <hr class="divider">
+    <div class="result-title" style="text-align:center;font-size:1.1rem;">総合グレード</div>
+    <div class="overall-grade" id="overall-grade">-</div>
+    <div class="overall-label" id="overall-label">-</div>
+    <div class="comment-box" id="overall-comment">-</div>
+    <p class="note">※医療診断ではありません。気になる方は専門医にご相談ください。</p>
+    <button class="retry-btn" onclick="location.reload()">もう一度チェックする 🔄</button>
+  </div>
+
+</div>
+<script>
+const amsQuestions = [
+  "総合的な調子の悪さ（健康状態の低下）",
+  "関節や筋肉の痛み（腰痛、関節痛、手足の痛み、背中の痛み）",
+  "ひどい発汗（突然の熱感、ほてり、内容に関わらず発汗する）",
+  "睡眠の悩み（寝つきが悪い、熟睡できない、朝早く目が覚める）",
+  "よく眠くなる、疲れを感じる",
+  "いらいらする（些細なことに怒る、不機嫌になる）",
+  "神経質になった（緊張しやすい、落ち着かない）",
+  "不安感（パニック状態になる）",
+  "体力の低下、活動性の低下",
+  "筋力の低下",
+  "憂うつな気分（落ち込む、悲しい、涙もろい、やる気が出ない）",
+  "「自分は働き盛りのピークを過ぎた」と思う",
+  "力尽きた、どん底にいると感じる",
+  "ひげの伸びが遅くなった",
+  "性的能力の衰え",
+  "早朝勃起（朝立ち）の回数の減少",
+  "性欲の低下（セックスがしたくない、性的な楽しみがない）"
+];
+const amsOptions = ["なし（1点）","軽い（2点）","中等度（3点）","重い（4点）","きわめて重い（5点）"];
+
+const adamQuestions = [
+  "性欲の低下がありますか？",
+  "元気がなくなってきましたか？",
+  "体力や持続力の低下がありますか？",
+  "身長が低くなりましたか？",
+  "毎日の楽しさがなくなりましたか？",
+  "悲しい気分や怒りっぽくなることがありますか？",
+  "勃起力が弱くなりましたか？",
+  "最近、運動能力が低下したと感じますか？",
+  "夕食後に居眠りをすることがありますか？",
+  "最近、仕事の能力が低下したと感じますか？"
+];
+
+const qpadQuestions = [
+  "不安感（理由のない不安）",
+  "抑うつ（気分が沈み、やる気が出ない）",
+  "興味の喪失（以前楽しめたことが楽しめない）",
+  "集中力の低下",
+  "易疲労感（疲れやすさ）",
+  "睡眠障害",
+  "発汗・のぼせ",
+  "肥満（特にお腹周り）",
+  "筋力低下",
+  "性欲の減退",
+  "朝立ちの回数の減少",
+  "勃起力の低下",
+  "射精感の低下"
+];
+const qpadOptions = ["なし（0点）","たまにある（1点）","よくある（2点）","ひどい（3点）"];
+
+let amsAnswers = new Array(17).fill(null);
+let adamAnswers = new Array(10).fill(null);
+let qpadAnswers = new Array(13).fill(null);
+let amsTotal = 0, adamPositive = false, qpadTotal = 0;
+
+function show(id) {
+  ['screen-top','screen-ams','screen-ams-result','screen-adam','screen-adam-result','screen-qpad','screen-qpad-result','screen-loading','screen-overall']
+    .forEach(s => document.getElementById(s).style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function renderAMS() {
+  const el = document.getElementById('ams-questions');
+  el.innerHTML = '';
+  amsQuestions.forEach((q, i) => {
+    const block = document.createElement('div');
+    block.className = 'question-block';
+    block.innerHTML = `<div class="q-num">Q${i+1}</div><div class="q-text">${q}</div>
+      <div class="options-5">${amsOptions.map((o, j) =>
+        `<button class="opt-btn ${amsAnswers[i]===j+1?'selected':''}" onclick="selectAMS(${i},${j+1},this)">${o}</button>`
+      ).join('')}</div>`;
+    el.appendChild(block);
+  });
+  updateAMSProgress();
+}
+
+function selectAMS(qi, val, btn) {
+  amsAnswers[qi] = val;
+  const parent = btn.closest('.options-5');
+  parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateAMSProgress();
+}
+
+function updateAMSProgress() {
+  const answered = amsAnswers.filter(a => a !== null).length;
+  document.getElementById('ams-progress-label').textContent = `回答済み ${answered} / 17`;
+  document.getElementById('ams-progress-fill').style.width = `${(answered/17)*100}%`;
+  document.getElementById('ams-next').disabled = answered < 17;
+}
+
+function startAMS() { show('screen-ams'); renderAMS(); }
+
+function calcAMS() {
+  amsTotal = amsAnswers.reduce((s, v) => s + v, 0);
+  document.getElementById('ams-score').textContent = amsTotal;
+  const judgeEl = document.getElementById('ams-judge');
+  if (amsTotal <= 26) { judgeEl.textContent = 'なし'; judgeEl.className = 'result-judge judge-none'; }
+  else if (amsTotal <= 36) { judgeEl.textContent = '軽度'; judgeEl.className = 'result-judge judge-mild'; }
+  else if (amsTotal <= 49) { judgeEl.textContent = '中等度'; judgeEl.className = 'result-judge judge-moderate'; }
+  else { judgeEl.textContent = '重度'; judgeEl.className = 'result-judge judge-severe'; }
+  show('screen-ams-result');
+}
+
+function renderADAM() {
+  const el = document.getElementById('adam-questions');
+  el.innerHTML = '';
+  adamQuestions.forEach((q, i) => {
+    const block = document.createElement('div');
+    block.className = 'question-block';
+    block.innerHTML = `<div class="q-num">Q${i+1}</div><div class="q-text">${q}</div>
+      <div class="options-yn">
+        <button class="opt-yn ${adamAnswers[i]===true?'selected':''}" onclick="selectADAM(${i},true,this)">はい</button>
+        <button class="opt-yn ${adamAnswers[i]===false?'selected':''}" onclick="selectADAM(${i},false,this)">いいえ</button>
+      </div>`;
+    el.appendChild(block);
+  });
+  updateADAMProgress();
+}
+
+function selectADAM(qi, val, btn) {
+  adamAnswers[qi] = val;
+  const parent = btn.closest('.options-yn');
+  parent.querySelectorAll('.opt-yn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateADAMProgress();
+}
+
+function updateADAMProgress() {
+  const answered = adamAnswers.filter(a => a !== null).length;
+  document.getElementById('adam-progress-label').textContent = `回答済み ${answered} / 10`;
+  document.getElementById('adam-progress-fill').style.width = `${(answered/10)*100}%`;
+  document.getElementById('adam-next').disabled = answered < 10;
+}
+
+function startADAM() { show('screen-adam'); renderADAM(); }
+
+function calcADAM() {
+  const q1 = adamAnswers[0], q7 = adamAnswers[6];
+  const othersYes = adamAnswers.filter((v, i) => i !== 0 && i !== 6 && v === true).length;
+  adamPositive = q1 || q7 || othersYes >= 3;
+  const judgeEl = document.getElementById('adam-judge');
+  if (adamPositive) { judgeEl.textContent = '陽性（テストステロン低下の疑いあり）'; judgeEl.className = 'result-judge judge-positive'; }
+  else { judgeEl.textContent = '陰性（疑いなし）'; judgeEl.className = 'result-judge judge-negative'; }
+  show('screen-adam-result');
+}
+
+function renderQPAD() {
+  const el = document.getElementById('qpad-questions');
+  el.innerHTML = '';
+  qpadQuestions.forEach((q, i) => {
+    const block = document.createElement('div');
+    block.className = 'question-block';
+    block.innerHTML = `<div class="q-num">Q${i+1}</div><div class="q-text">${q}</div>
+      <div class="options-4">${qpadOptions.map((o, j) =>
+        `<button class="opt-btn ${qpadAnswers[i]===j?'selected':''}" onclick="selectQPAD(${i},${j},this)">${o}</button>`
+      ).join('')}</div>`;
+    el.appendChild(block);
+  });
+  updateQPADProgress();
+}
+
+function selectQPAD(qi, val, btn) {
+  qpadAnswers[qi] = val;
+  const parent = btn.closest('.options-4');
+  parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateQPADProgress();
+}
+
+function updateQPADProgress() {
+  const answered = qpadAnswers.filter(a => a !== null).length;
+  document.getElementById('qpad-progress-label').textContent = `回答済み ${answered} / 13`;
+  document.getElementById('qpad-progress-fill').style.width = `${(answered/13)*100}%`;
+  document.getElementById('qpad-next').disabled = answered < 13;
+}
+
+function startQPAD() { show('screen-qpad'); renderQPAD(); }
+
+function calcQPAD() {
+  qpadTotal = qpadAnswers.reduce((s, v) => s + v, 0);
+  document.getElementById('qpad-score').textContent = qpadTotal;
+  const judgeEl = document.getElementById('qpad-judge');
+  if (qpadTotal < 15) { judgeEl.textContent = '基準値以下'; judgeEl.className = 'result-judge judge-none'; }
+  else { judgeEl.textContent = 'LOH症候群の疑いあり'; judgeEl.className = 'result-judge judge-severe'; }
+  show('screen-qpad-result');
+}
+
+function calcGrade() {
+  let pts = 0;
+  // AMS
+  if (amsTotal <= 26) pts += 0;
+  else if (amsTotal <= 36) pts += 1;
+  else if (amsTotal <= 49) pts += 2;
+  else pts += 3;
+  // ADAM
+  if (adamPositive) pts += 2;
+  // q-PAD
+  if (qpadTotal < 15) pts += 0;
+  else if (qpadTotal < 25) pts += 1;
+  else if (qpadTotal < 32) pts += 2;
+  else pts += 3;
+
+  if (pts === 0) return 'A';
+  if (pts <= 2) return 'B';
+  if (pts <= 4) return 'C';
+  if (pts <= 6) return 'D';
+  return 'E';
+}
+
+function gradeLabel(g) {
+  return {A:'非常に良好', B:'概ね良好', C:'やや注意が必要', D:'注意が必要', E:'早めに専門医へ相談を'}[g];
+}
+
+function gradeComment(g) {
+  return {
+    A: '3つのスコアがいずれも基準値内です。\n現在の生活習慣を続けながら、定期的にセルフチェックを行いましょう。',
+    B: 'いくつかの項目で軽度の変化が見られます。\n睡眠・運動・食事のバランスを意識することで改善が期待できます。定期的なチェックをお勧めします。',
+    C: '複数のスコアで注意すべき値が出ています。\n生活習慣の見直しを検討してください。気になる症状が続く場合は、泌尿器科や男性更年期専門外来への相談も選択肢です。',
+    D: '複数のスコアで顕著な変化が見られます。\n男性ホルモンの低下が影響している可能性があります。専門医（泌尿器科・メンズヘルス外来）への相談をお勧めします。',
+    E: '3つのスコアが全体的に高い値を示しています。\nLOH症候群（男性更年期障害）の可能性があります。できるだけ早めに泌尿器科やメンズヘルス専門外来を受診されることをお勧めします。'
+  }[g];
+}
+
+function showOverall() {
+  show('screen-loading');
+  setTimeout(() => {
+    const grade = calcGrade();
+
+    // AMSサマリー
+    document.getElementById('r-ams-score').textContent = amsTotal;
+    const ramsJ = document.getElementById('r-ams-judge');
+    if (amsTotal <= 26) { ramsJ.textContent='なし'; ramsJ.className='result-judge judge-none'; }
+    else if (amsTotal <= 36) { ramsJ.textContent='軽度'; ramsJ.className='result-judge judge-mild'; }
+    else if (amsTotal <= 49) { ramsJ.textContent='中等度'; ramsJ.className='result-judge judge-moderate'; }
+    else { ramsJ.textContent='重度'; ramsJ.className='result-judge judge-severe'; }
+
+    // ADAMサマリー
+    const radamJ = document.getElementById('r-adam-judge');
+    if (adamPositive) { radamJ.textContent='陽性'; radamJ.className='result-judge judge-positive'; }
+    else { radamJ.textContent='陰性'; radamJ.className='result-judge judge-negative'; }
+
+    // q-PADサマリー
+    document.getElementById('r-qpad-score').textContent = qpadTotal;
+    const rqpadJ = document.getElementById('r-qpad-judge');
+    if (qpadTotal < 15) { rqpadJ.textContent='基準値以下'; rqpadJ.className='result-judge judge-none'; }
+    else { rqpadJ.textContent='LOH症候群の疑いあり'; rqpadJ.className='result-judge judge-severe'; }
+
+    // 総合
+    const gradeEl = document.getElementById('overall-grade');
+    gradeEl.textContent = grade;
+    gradeEl.className = `overall-grade grade-${grade}`;
+    document.getElementById('overall-label').textContent = gradeLabel(grade);
+    document.getElementById('overall-comment').textContent = gradeComment(grade);
+
+    show('screen-overall');
+  }, 1500);
+}
+</script>
+</body>
+</html>
