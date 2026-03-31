@@ -26,22 +26,20 @@
     .progress-label { font-size: 0.8rem; color: #ffb347; font-weight: 700; margin-bottom: 6px; }
     .progress-bar { background: #ffe8f0; border-radius: 99px; height: 8px; overflow: hidden; }
     .progress-fill { height: 100%; background: linear-gradient(90deg,#ff6b9d,#ffb347); border-radius: 99px; transition: width 0.4s ease; }
-    .question-block { margin-bottom: 24px; border-radius: 14px; padding: 4px; transition: background 0.3s; }
-    .question-block.unanswered { background: #fff0f0; border: 2px solid #ffaaaa; }
+    .question-block { margin-bottom: 20px; border-radius: 14px; padding: 16px; background: #fff8fc; border: 2px solid #ffe0ee; transition: all 0.3s; }
+    .question-block.answered { border-color: #ffb347; background: #fffaf5; }
     .q-num { font-size: 0.78rem; color: #ffb347; font-weight: 700; margin-bottom: 6px; }
     .q-text { font-size: 1rem; font-weight: 700; color: #333; line-height: 1.6; margin-bottom: 14px; }
     .options-5, .options-4 { display: flex; flex-direction: column; gap: 8px; }
     .options-yn { display: flex; gap: 10px; }
-    .opt-btn { background: #fff8fc; border: 2px solid #ffd0e8; border-radius: 12px; padding: 12px 16px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 0.92rem; font-weight: 700; color: #444; cursor: pointer; transition: all 0.18s; text-align: left; }
+    .opt-btn { background: white; border: 2px solid #ffd0e8; border-radius: 12px; padding: 12px 16px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 0.92rem; font-weight: 700; color: #444; cursor: pointer; transition: all 0.18s; text-align: left; }
     .opt-btn:hover { background: #fff0f8; border-color: #ff6b9d; }
     .opt-btn.selected { background: linear-gradient(135deg,#ff6b9d,#ffb347); border-color: #ff6b9d; color: white; }
-    .opt-yn { flex: 1; text-align: center; padding: 14px; border-radius: 12px; border: 2px solid #ffd0e8; background: #fff8fc; font-family: 'Zen Maru Gothic', sans-serif; font-size: 1rem; font-weight: 900; color: #444; cursor: pointer; transition: all 0.18s; }
+    .opt-yn { flex: 1; text-align: center; padding: 14px; border-radius: 12px; border: 2px solid #ffd0e8; background: white; font-family: 'Zen Maru Gothic', sans-serif; font-size: 1rem; font-weight: 900; color: #444; cursor: pointer; transition: all 0.18s; }
     .opt-yn:hover { background: #fff0f8; border-color: #ff6b9d; }
     .opt-yn.selected { background: linear-gradient(135deg,#ff6b9d,#ffb347); border-color: #ff6b9d; color: white; }
     .next-btn, .start-btn { width: 100%; padding: 16px; background: linear-gradient(135deg,#ff6b9d,#ffb347); color: white; border: none; border-radius: 14px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 1rem; font-weight: 900; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 16px rgba(255,107,157,0.3); transition: all 0.18s; }
-    .next-btn:hover, .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,107,157,0.4); }
-    .next-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-    .alert-msg { background: #fff0f0; border: 2px solid #ffaaaa; border-radius: 12px; padding: 12px 16px; font-size: 0.88rem; color: #c00; font-weight: 700; margin-top: 12px; display: none; }
+    .next-btn:hover, .start-btn:hover { transform: translateY(-2px); }
     .result-section { margin-bottom: 20px; }
     .result-title { font-size: 0.95rem; font-weight: 900; color: #d63384; margin-bottom: 8px; }
     .result-score { font-size: 2rem; font-weight: 900; color: #ff6b9d; }
@@ -62,10 +60,11 @@
     .overall-label { text-align: center; font-size: 1rem; font-weight: 700; color: #666; margin-bottom: 16px; }
     .comment-box { background: #fff8fc; border: 2px solid #ffd0e8; border-radius: 14px; padding: 16px; font-size: 0.92rem; color: #444; line-height: 1.8; white-space: pre-wrap; }
     .retry-btn { width: 100%; margin-top: 16px; padding: 14px; background: white; color: #ff6b9d; border: 2.5px solid #ff6b9d; border-radius: 14px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 0.95rem; font-weight: 900; cursor: pointer; transition: all 0.18s; }
-    .retry-btn:hover { background: #fff0f8; }
     .note { font-size: 0.78rem; color: #bbb; text-align: center; margin-top: 16px; line-height: 1.6; }
     .loading-icon { font-size: 3rem; animation: spin 1.2s linear infinite; display: block; margin-bottom: 12px; text-align: center; }
     @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+    .chunk-group { margin-bottom: 8px; }
+    .chunk-divider { text-align: center; font-size: 0.8rem; color: #ffb347; font-weight: 700; margin: 16px 0 12px; }
   </style>
 </head>
 <body>
@@ -75,7 +74,7 @@
   <div id="screen-top" class="card">
     <div class="step-badge">男性ホルモン セルフチェック</div>
     <h1>💪 3つのスコアで<br>あなたの状態を確認</h1>
-    <p class="desc">AMS・ADAM・q-PADの3種類の国際的な指標で、男性ホルモンの状態をチェックします。全部で40問、所要時間は約5分です。</p>
+    <p class="desc">AMS・ADAM・q-PADの3種類の国際的な指標で、男性ホルモンの状態をチェックします。3問ずつ表示されます。</p>
     <div style="background:#fff0f8;border-radius:14px;padding:14px;margin-bottom:8px;">
       <div style="font-size:0.85rem;font-weight:700;color:#d63384;margin-bottom:6px;">📋 チェックの流れ</div>
       <div style="font-size:0.85rem;color:#666;line-height:1.8;">
@@ -85,7 +84,7 @@
         ④ 総合判定（A〜E）
       </div>
     </div>
-    <p class="note">※このチェックは医療診断ではありません。<br>結果はあくまで目安としてご活用ください。</p>
+    <p class="note">※このチェックは医療診断ではありません。</p>
     <button class="start-btn" onclick="startAMS()">はじめる →</button>
   </div>
 
@@ -99,8 +98,6 @@
       <div class="progress-bar"><div class="progress-fill" id="ams-progress-fill" style="width:0%"></div></div>
     </div>
     <div id="ams-questions"></div>
-    <div class="alert-msg" id="ams-alert">⚠️ 未回答の設問があります。赤くなっている設問を確認してください。</div>
-    <button class="next-btn" id="ams-next" onclick="calcAMS()">結果を見る</button>
   </div>
 
   <!-- AMS RESULT -->
@@ -126,8 +123,6 @@
       <div class="progress-bar"><div class="progress-fill" id="adam-progress-fill" style="width:0%"></div></div>
     </div>
     <div id="adam-questions"></div>
-    <div class="alert-msg" id="adam-alert">⚠️ 未回答の設問があります。赤くなっている設問を確認してください。</div>
-    <button class="next-btn" id="adam-next" onclick="calcADAM()">結果を見る</button>
   </div>
 
   <!-- ADAM RESULT -->
@@ -152,8 +147,6 @@
       <div class="progress-bar"><div class="progress-fill" id="qpad-progress-fill" style="width:0%"></div></div>
     </div>
     <div id="qpad-questions"></div>
-    <div class="alert-msg" id="qpad-alert">⚠️ 未回答の設問があります。赤くなっている設問を確認してください。</div>
-    <button class="next-btn" id="qpad-next" onclick="calcQPAD()">結果を見る</button>
   </div>
 
   <!-- q-PAD RESULT -->
@@ -206,12 +199,12 @@
 
 </div>
 <script>
-// ===== Supabase =====
-const SUPABASE_URL = 'https://lnaftvhunctwyirdilez.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxuYWZ0dmh1bmN0d3lpcmRpbGV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzA5MzIsImV4cCI6MjA5MDQ0NjkzMn0.y29sz7BK4ISw9AFimbyGCCfy2dHEA7Ldkj3nf0_-3y4';
+const SUPABASE_URL = 'ここにSUPABASE_URLを入れる';
+const SUPABASE_KEY = 'ここにSUPABASE_ANON_KEYを入れる';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ===== 質問データ =====
+const CHUNK = 3;
+
 const amsQuestions = [
   "総合的な調子の悪さ（健康状態の低下）",
   "関節や筋肉の痛み（腰痛、関節痛、手足の痛み、背中の痛み）",
@@ -269,67 +262,109 @@ let qpadAnswers = new Array(13).fill(null);
 let amsTotal = 0, adamPositive = false, qpadTotal = 0;
 
 function show(id) {
-  ['screen-top','screen-ams','screen-ams-result','screen-adam','screen-adam-result','screen-qpad','screen-qpad-result','screen-loading','screen-overall']
+  ['screen-top','screen-ams','screen-ams-result','screen-adam','screen-adam-result',
+   'screen-qpad','screen-qpad-result','screen-loading','screen-overall']
     .forEach(s => document.getElementById(s).style.display = 'none');
   document.getElementById(id).style.display = 'block';
   window.scrollTo(0, 0);
 }
 
-// ===== 未回答チェック & スクロール =====
-function checkUnanswered(answers, prefix, alertId) {
-  const blocks = document.querySelectorAll(`#${prefix}-questions .question-block`);
-  let firstUnanswered = null;
-  blocks.forEach((block, i) => {
-    if (answers[i] === null) {
-      block.classList.add('unanswered');
-      if (!firstUnanswered) firstUnanswered = block;
-    } else {
-      block.classList.remove('unanswered');
-    }
-  });
-  if (firstUnanswered) {
-    document.getElementById(alertId).style.display = 'block';
-    firstUnanswered.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return false;
+// 3問ずつ表示する共通関数
+function renderChunked(questions, answers, containerId, optionsType, optionsData, selectFn, progressLabelId, progressFillId, onAllDone) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  const total = questions.length;
+  let visibleUpTo = 0;
+
+  // 何問目まで表示するか計算
+  for (let i = 0; i < total; i++) {
+    if (answers[i] !== null) visibleUpTo = i + 1;
+    else break;
   }
-  document.getElementById(alertId).style.display = 'none';
-  return true;
+  // 最初の3問は必ず表示
+  visibleUpTo = Math.max(visibleUpTo, Math.min(CHUNK, total));
+  // 3問単位に切り上げ
+  visibleUpTo = Math.min(Math.ceil(visibleUpTo / CHUNK) * CHUNK, total);
+
+  for (let i = 0; i < visibleUpTo; i++) {
+    const block = document.createElement('div');
+    block.className = `question-block${answers[i] !== null ? ' answered' : ''}`;
+    block.id = `qblock-${containerId}-${i}`;
+
+    let optionsHTML = '';
+    if (optionsType === 'yn') {
+      optionsHTML = `<div class="options-yn">
+        <button class="opt-yn ${answers[i]===true?'selected':''}" onclick="${selectFn}(${i},true,this)">はい</button>
+        <button class="opt-yn ${answers[i]===false?'selected':''}" onclick="${selectFn}(${i},false,this)">いいえ</button>
+      </div>`;
+    } else {
+      optionsHTML = `<div class="${optionsType}">${optionsData.map((o,j) =>
+        `<button class="opt-btn ${answers[i]===j+(optionsType==='options-5'?1:0)?'selected':''}" onclick="${selectFn}(${i},${j+(optionsType==='options-5'?1:0)},this)">${o}</button>`
+      ).join('')}</div>`;
+    }
+
+    block.innerHTML = `<div class="q-num">Q${i+1}</div><div class="q-text">${questions[i]}</div>${optionsHTML}`;
+    el.appendChild(block);
+
+    // 3問ごとに区切り線
+    if ((i + 1) % CHUNK === 0 && i + 1 < visibleUpTo) {
+      const div = document.createElement('div');
+      div.className = 'chunk-divider';
+      div.textContent = `✅ ${i+1}問完了`;
+      el.appendChild(div);
+    }
+  }
+
+  updateProgress(answers, total, progressLabelId, progressFillId);
+}
+
+function updateProgress(answers, total, labelId, fillId) {
+  const answered = answers.filter(a => a !== null).length;
+  document.getElementById(labelId).textContent = `回答済み ${answered} / ${total}`;
+  document.getElementById(fillId).style.width = `${(answered/total)*100}%`;
+}
+
+function afterSelect(answers, questions, containerId, optionsType, optionsData, selectFn, progressLabelId, progressFillId, qi, onAllDone) {
+  const total = questions.length;
+  const answered = answers.filter(a => a !== null).length;
+  updateProgress(answers, total, progressLabelId, progressFillId);
+
+  // 全問回答済み
+  if (answered === total) {
+    setTimeout(onAllDone, 400);
+    return;
+  }
+
+  // 次の3問グループの先頭かどうか
+  const nextIndex = qi + 1;
+  if (nextIndex < total && answers[nextIndex] === null) {
+    const chunkStart = Math.floor(nextIndex / CHUNK) * CHUNK;
+    if (nextIndex === chunkStart) {
+      // 新しいチャンクを追加表示
+      renderChunked(questions, answers, containerId, optionsType, optionsData, selectFn, progressLabelId, progressFillId, onAllDone);
+      setTimeout(() => {
+        const nextBlock = document.getElementById(`qblock-${containerId}-${nextIndex}`);
+        if (nextBlock) nextBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }
 }
 
 // ===== AMS =====
-function renderAMS() {
-  const el = document.getElementById('ams-questions');
-  el.innerHTML = '';
-  amsQuestions.forEach((q, i) => {
-    const block = document.createElement('div');
-    block.className = 'question-block';
-    block.innerHTML = `<div class="q-num">Q${i+1}</div><div class="q-text">${q}</div>
-      <div class="options-5">${amsOptions.map((o,j) =>
-        `<button class="opt-btn ${amsAnswers[i]===j+1?'selected':''}" onclick="selectAMS(${i},${j+1},this)">${o}</button>`
-      ).join('')}</div>`;
-    el.appendChild(block);
-  });
-  updateAMSProgress();
+function startAMS() {
+  show('screen-ams');
+  renderChunked(amsQuestions, amsAnswers, 'ams-questions', 'options-5', amsOptions, 'selectAMS', 'ams-progress-label', 'ams-progress-fill', calcAMS);
 }
 
 function selectAMS(qi, val, btn) {
   amsAnswers[qi] = val;
   btn.closest('.options-5').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  btn.closest('.question-block').classList.remove('unanswered');
-  updateAMSProgress();
+  btn.closest('.question-block').classList.add('answered');
+  afterSelect(amsAnswers, amsQuestions, 'ams-questions', 'options-5', amsOptions, 'selectAMS', 'ams-progress-label', 'ams-progress-fill', qi, calcAMS);
 }
-
-function updateAMSProgress() {
-  const answered = amsAnswers.filter(a => a !== null).length;
-  document.getElementById('ams-progress-label').textContent = `回答済み ${answered} / 17`;
-  document.getElementById('ams-progress-fill').style.width = `${(answered/17)*100}%`;
-}
-
-function startAMS() { show('screen-ams'); renderAMS(); }
 
 function calcAMS() {
-  if (!checkUnanswered(amsAnswers, 'ams', 'ams-alert')) return;
   amsTotal = amsAnswers.reduce((s,v) => s+v, 0);
   document.getElementById('ams-score').textContent = amsTotal;
   const judgeEl = document.getElementById('ams-judge');
@@ -341,40 +376,20 @@ function calcAMS() {
 }
 
 // ===== ADAM =====
-function renderADAM() {
-  const el = document.getElementById('adam-questions');
-  el.innerHTML = '';
-  adamQuestions.forEach((q, i) => {
-    const block = document.createElement('div');
-    block.className = 'question-block';
-    block.innerHTML = `<div class="q-num">Q${i+1}</div><div class="q-text">${q}</div>
-      <div class="options-yn">
-        <button class="opt-yn ${adamAnswers[i]===true?'selected':''}" onclick="selectADAM(${i},true,this)">はい</button>
-        <button class="opt-yn ${adamAnswers[i]===false?'selected':''}" onclick="selectADAM(${i},false,this)">いいえ</button>
-      </div>`;
-    el.appendChild(block);
-  });
-  updateADAMProgress();
+function startADAM() {
+  show('screen-adam');
+  renderChunked(adamQuestions, adamAnswers, 'adam-questions', 'yn', [], 'selectADAM', 'adam-progress-label', 'adam-progress-fill', calcADAM);
 }
 
 function selectADAM(qi, val, btn) {
   adamAnswers[qi] = val;
   btn.closest('.options-yn').querySelectorAll('.opt-yn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  btn.closest('.question-block').classList.remove('unanswered');
-  updateADAMProgress();
+  btn.closest('.question-block').classList.add('answered');
+  afterSelect(adamAnswers, adamQuestions, 'adam-questions', 'yn', [], 'selectADAM', 'adam-progress-label', 'adam-progress-fill', qi, calcADAM);
 }
-
-function updateADAMProgress() {
-  const answered = adamAnswers.filter(a => a !== null).length;
-  document.getElementById('adam-progress-label').textContent = `回答済み ${answered} / 10`;
-  document.getElementById('adam-progress-fill').style.width = `${(answered/10)*100}%`;
-}
-
-function startADAM() { show('screen-adam'); renderADAM(); }
 
 function calcADAM() {
-  if (!checkUnanswered(adamAnswers, 'adam', 'adam-alert')) return;
   const q1 = adamAnswers[0], q7 = adamAnswers[6];
   const othersYes = adamAnswers.filter((v,i) => i!==0 && i!==6 && v===true).length;
   adamPositive = q1 || q7 || othersYes >= 3;
@@ -385,39 +400,20 @@ function calcADAM() {
 }
 
 // ===== q-PAD =====
-function renderQPAD() {
-  const el = document.getElementById('qpad-questions');
-  el.innerHTML = '';
-  qpadQuestions.forEach((q, i) => {
-    const block = document.createElement('div');
-    block.className = 'question-block';
-    block.innerHTML = `<div class="q-num">Q${i+1}</div><div class="q-text">${q}</div>
-      <div class="options-4">${qpadOptions.map((o,j) =>
-        `<button class="opt-btn ${qpadAnswers[i]===j?'selected':''}" onclick="selectQPAD(${i},${j},this)">${o}</button>`
-      ).join('')}</div>`;
-    el.appendChild(block);
-  });
-  updateQPADProgress();
+function startQPAD() {
+  show('screen-qpad');
+  renderChunked(qpadQuestions, qpadAnswers, 'qpad-questions', 'options-4', qpadOptions, 'selectQPAD', 'qpad-progress-label', 'qpad-progress-fill', calcQPAD);
 }
 
 function selectQPAD(qi, val, btn) {
   qpadAnswers[qi] = val;
   btn.closest('.options-4').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  btn.closest('.question-block').classList.remove('unanswered');
-  updateQPADProgress();
+  btn.closest('.question-block').classList.add('answered');
+  afterSelect(qpadAnswers, qpadQuestions, 'qpad-questions', 'options-4', qpadOptions, 'selectQPAD', 'qpad-progress-label', 'qpad-progress-fill', qi, calcQPAD);
 }
-
-function updateQPADProgress() {
-  const answered = qpadAnswers.filter(a => a !== null).length;
-  document.getElementById('qpad-progress-label').textContent = `回答済み ${answered} / 13`;
-  document.getElementById('qpad-progress-fill').style.width = `${(answered/13)*100}%`;
-}
-
-function startQPAD() { show('screen-qpad'); renderQPAD(); }
 
 function calcQPAD() {
-  if (!checkUnanswered(qpadAnswers, 'qpad', 'qpad-alert')) return;
   qpadTotal = qpadAnswers.reduce((s,v) => s+v, 0);
   document.getElementById('qpad-score').textContent = qpadTotal;
   const judgeEl = document.getElementById('qpad-judge');
@@ -465,7 +461,6 @@ async function showOverall() {
   const amsJudge = amsTotal<=26?'なし':amsTotal<=36?'軽度':amsTotal<=49?'中等度':'重度';
   const qpadJudge = qpadTotal<15?'基準値以下':'LOH症候群の疑いあり';
 
-  // Supabaseに保存
   await sb.from('scores').insert({
     ams_score: amsTotal,
     ams_judge: amsJudge,
@@ -480,22 +475,18 @@ async function showOverall() {
     const ramsJ = document.getElementById('r-ams-judge');
     ramsJ.textContent = amsJudge;
     ramsJ.className = `result-judge ${amsTotal<=26?'judge-none':amsTotal<=36?'judge-mild':amsTotal<=49?'judge-moderate':'judge-severe'}`;
-
     const radamJ = document.getElementById('r-adam-judge');
     radamJ.textContent = adamPositive?'陽性':'陰性';
     radamJ.className = `result-judge ${adamPositive?'judge-positive':'judge-negative'}`;
-
     document.getElementById('r-qpad-score').textContent = qpadTotal;
     const rqpadJ = document.getElementById('r-qpad-judge');
     rqpadJ.textContent = qpadJudge;
     rqpadJ.className = `result-judge ${qpadTotal<15?'judge-none':'judge-severe'}`;
-
     const gradeEl = document.getElementById('overall-grade');
     gradeEl.textContent = grade;
     gradeEl.className = `overall-grade grade-${grade}`;
     document.getElementById('overall-label').textContent = gradeLabel(grade);
     document.getElementById('overall-comment').textContent = gradeComment(grade);
-
     show('screen-overall');
   }, 1500);
 }
