@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>男性ホルモン セルフチェック</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Noto Sans JP', sans-serif; background: #0f1923; min-height: 100vh; padding: 16px; display: flex; align-items: flex-start; justify-content: center; }
@@ -179,9 +178,6 @@
 </div>
 
 <script>
-const SUPABASE_URL = 'https://lnaftvhunctwyirdilez.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxuYWZ0dmh1bmN0d3lpcmRpbGV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzA5MzIsImV4cCI6MjA5MDQ0NjkzMn0.y29sz7BK4ISw9AFimbyGCCfy2dHEA7Ldkj3nf0_-3y4';
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const CHUNK = 3;
 
 const amsQuestions = [
@@ -387,7 +383,20 @@ async function showOverall() {
   const grade = calcGrade();
   const amsJudge = amsTotal<=26?'なし':amsTotal<=36?'軽度':amsTotal<=49?'中等度':'重度';
   const qpadJudge = qpadTotal<15?'基準値以下':'LOH症候群の疑いあり';
-  await sb.from('scores').insert({ams_score:amsTotal,ams_judge:amsJudge,adam_positive:adamPositive,qpad_score:qpadTotal,qpad_judge:qpadJudge,overall_grade:grade});
+
+  await fetch('/api/save-score', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      ams_score: amsTotal,
+      ams_judge: amsJudge,
+      adam_positive: adamPositive,
+      qpad_score: qpadTotal,
+      qpad_judge: qpadJudge,
+      overall_grade: grade
+    })
+  });
+
   setTimeout(()=>{
     document.getElementById('r-ams-score').textContent=amsTotal;
     const rj=document.getElementById('r-ams-judge');
