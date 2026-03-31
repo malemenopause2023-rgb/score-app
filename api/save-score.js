@@ -7,10 +7,24 @@ const supabase = createClient(
 
 module.exports = async function handler(req, res) {
   try {
-    const { ams_score, ams_judge, adam_positive, qpad_score, qpad_judge, overall_grade } = req.body
+    const {
+      ams_score, ams_judge, adam_positive,
+      qpad_score, qpad_judge, overall_grade
+    } = req.body
+
+    // クッキーからLINEユーザーIDを取得
+    const cookies = req.headers.cookie || ''
+    const lineUid = cookies.split(';')
+      .map(c => c.trim())
+      .find(c => c.startsWith('line_uid='))
+      ?.split('=')[1] || null
+
     const { error } = await supabase.from('scores').insert({
-      ams_score, ams_judge, adam_positive, qpad_score, qpad_judge, overall_grade
+      ams_score, ams_judge, adam_positive,
+      qpad_score, qpad_judge, overall_grade,
+      line_uid: lineUid
     })
+
     if (error) return res.status(500).json({ error })
     res.status(200).json({ ok: true })
   } catch (err) {
