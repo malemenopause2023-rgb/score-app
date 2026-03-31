@@ -1,3 +1,4 @@
+
 const { createClient } = require('@supabase/supabase-js')
 
 const supabase = createClient(
@@ -13,11 +14,18 @@ module.exports = async function handler(req, res) {
     } = req.body
 
     // クッキーからLINEユーザーIDを取得
-    const cookies = req.headers.cookie || ''
-    const lineUid = cookies.split(';')
-      .map(c => c.trim())
-      .find(c => c.startsWith('line_uid='))
-      ?.split('=')[1] || null
+    const cookieHeader = req.headers.cookie || ''
+    console.log('cookies:', cookieHeader)
+    
+    let lineUid = null
+    cookieHeader.split(';').forEach(c => {
+      const parts = c.trim().split('=')
+      if (parts[0] === 'line_uid') {
+        lineUid = parts.slice(1).join('=')
+      }
+    })
+    
+    console.log('lineUid:', lineUid)
 
     const { error } = await supabase.from('scores').insert({
       ams_score, ams_judge, adam_positive,
@@ -28,6 +36,7 @@ module.exports = async function handler(req, res) {
     if (error) return res.status(500).json({ error })
     res.status(200).json({ ok: true })
   } catch (err) {
+    console.error(err)
     res.status(500).json({ error: err.message })
   }
 }
