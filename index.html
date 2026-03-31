@@ -281,10 +281,9 @@ function renderChunked(questions, answers, containerId, optionsType, optionsData
     if (answers[i] !== null) visibleUpTo = i + 1;
     else break;
   }
-  // 最初の3問は必ず表示
-  visibleUpTo = Math.max(visibleUpTo, Math.min(CHUNK, total));
-  // 3問単位に切り上げ
-  visibleUpTo = Math.min(Math.ceil(visibleUpTo / CHUNK) * CHUNK, total);
+   // 次の未回答問題を含むチャンクまで表示
+  visibleUpTo = Math.min(Math.ceil((visibleUpTo + 1) / CHUNK) * CHUNK, total);
+  visibleUpTo = Math.max(visibleUpTo, CHUNK);
 
   for (let i = 0; i < visibleUpTo; i++) {
     const block = document.createElement('div');
