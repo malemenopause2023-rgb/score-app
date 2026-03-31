@@ -8,15 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Zen Maru Gothic', sans-serif;
-      background: linear-gradient(135deg, #fff0f6 0%, #fff9f0 50%, #f0f8ff 100%);
-      min-height: 100vh;
-      padding: 16px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-    }
+    body { font-family: 'Zen Maru Gothic', sans-serif; background: linear-gradient(135deg,#fff0f6 0%,#fff9f0 50%,#f0f8ff 100%); min-height: 100vh; padding: 16px; display: flex; align-items: flex-start; justify-content: center; }
     .container { max-width: 480px; width: 100%; padding-top: 16px; padding-bottom: 40px; }
     .card { background: white; border-radius: 24px; padding: 28px 24px; box-shadow: 0 4px 24px rgba(255,100,150,0.12); border: 2.5px solid #ffe0ee; }
     .step-badge { display: inline-block; background: linear-gradient(135deg,#ff6b9d,#ffb347); color: white; font-size: 0.75rem; font-weight: 900; padding: 4px 14px; border-radius: 99px; margin-bottom: 12px; }
@@ -32,7 +24,7 @@
     .q-text { font-size: 1rem; font-weight: 700; color: #333; line-height: 1.6; margin-bottom: 14px; }
     .options-5, .options-4 { display: flex; flex-direction: column; gap: 8px; }
     .options-yn { display: flex; gap: 10px; }
-    .opt-btn { background: white; border: 2px solid #ffd0e8; border-radius: 12px; padding: 12px 16px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 0.92rem; font-weight: 700; color: #444; cursor: pointer; transition: all 0.18s; text-align: left; }
+    .opt-btn { background: white; border: 2px solid #ffd0e8; border-radius: 12px; padding: 12px 16px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 0.92rem; font-weight: 700; color: #444; cursor: pointer; transition: all 0.18s; text-align: left; width: 100%; }
     .opt-btn:hover { background: #fff0f8; border-color: #ff6b9d; }
     .opt-btn.selected { background: linear-gradient(135deg,#ff6b9d,#ffb347); border-color: #ff6b9d; color: white; }
     .opt-yn { flex: 1; text-align: center; padding: 14px; border-radius: 12px; border: 2px solid #ffd0e8; background: white; font-family: 'Zen Maru Gothic', sans-serif; font-size: 1rem; font-weight: 900; color: #444; cursor: pointer; transition: all 0.18s; }
@@ -52,43 +44,28 @@
     .judge-negative { background: #e8f8e8; color: #2d8a2d; }
     .divider { border: none; border-top: 2px dashed #ffd0e8; margin: 20px 0; }
     .overall-grade { text-align: center; font-size: 6rem; font-weight: 900; line-height: 1; margin: 16px 0; }
-    .grade-A { color: #2d8a2d; }
-    .grade-B { color: #5a9a00; }
-    .grade-C { color: #c17f00; }
-    .grade-D { color: #c85000; }
-    .grade-E { color: #c00000; }
+    .grade-A { color: #2d8a2d; } .grade-B { color: #5a9a00; } .grade-C { color: #c17f00; } .grade-D { color: #c85000; } .grade-E { color: #c00000; }
     .overall-label { text-align: center; font-size: 1rem; font-weight: 700; color: #666; margin-bottom: 16px; }
     .comment-box { background: #fff8fc; border: 2px solid #ffd0e8; border-radius: 14px; padding: 16px; font-size: 0.92rem; color: #444; line-height: 1.8; white-space: pre-wrap; }
-    .retry-btn { width: 100%; margin-top: 16px; padding: 14px; background: white; color: #ff6b9d; border: 2.5px solid #ff6b9d; border-radius: 14px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 0.95rem; font-weight: 900; cursor: pointer; transition: all 0.18s; }
+    .retry-btn { width: 100%; margin-top: 16px; padding: 14px; background: white; color: #ff6b9d; border: 2.5px solid #ff6b9d; border-radius: 14px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 0.95rem; font-weight: 900; cursor: pointer; }
     .note { font-size: 0.78rem; color: #bbb; text-align: center; margin-top: 16px; line-height: 1.6; }
     .loading-icon { font-size: 3rem; animation: spin 1.2s linear infinite; display: block; margin-bottom: 12px; text-align: center; }
     @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
-    .chunk-group { margin-bottom: 8px; }
-    .chunk-divider { text-align: center; font-size: 0.8rem; color: #ffb347; font-weight: 700; margin: 16px 0 12px; }
   </style>
 </head>
 <body>
 <div class="container">
-
-  <!-- TOP -->
   <div id="screen-top" class="card">
     <div class="step-badge">男性ホルモン セルフチェック</div>
     <h1>💪 3つのスコアで<br>あなたの状態を確認</h1>
-    <p class="desc">AMS・ADAM・q-PADの3種類の国際的な指標で、男性ホルモンの状態をチェックします。3問ずつ表示されます。</p>
+    <p class="desc">AMS・ADAM・q-PADの3種類の国際的な指標で状態をチェックします。3問ずつ表示されます。</p>
     <div style="background:#fff0f8;border-radius:14px;padding:14px;margin-bottom:8px;">
       <div style="font-size:0.85rem;font-weight:700;color:#d63384;margin-bottom:6px;">📋 チェックの流れ</div>
-      <div style="font-size:0.85rem;color:#666;line-height:1.8;">
-        ① AMSスコア（17問）<br>
-        ② ADAMスコア（10問）<br>
-        ③ q-PADスコア（13問）<br>
-        ④ 総合判定（A〜E）
-      </div>
+      <div style="font-size:0.85rem;color:#666;line-height:1.8;">① AMSスコア（17問）<br>② ADAMスコア（10問）<br>③ q-PADスコア（13問）<br>④ 総合判定（A〜E）</div>
     </div>
     <p class="note">※このチェックは医療診断ではありません。</p>
-    <button class="start-btn" onclick="startAMS()">はじめる →</button>
+    <button class="start-btn" id="start-btn">はじめる →</button>
   </div>
-
-  <!-- AMS -->
   <div id="screen-ams" class="card" style="display:none">
     <div class="step-badge">STEP 1 / 3｜AMS スコア</div>
     <h1>📊 AMSスコア</h1>
@@ -99,8 +76,6 @@
     </div>
     <div id="ams-questions"></div>
   </div>
-
-  <!-- AMS RESULT -->
   <div id="screen-ams-result" class="card" style="display:none">
     <div class="step-badge">STEP 1 完了｜AMS スコア</div>
     <h1>📊 AMS スコア結果</h1>
@@ -110,10 +85,8 @@
       <div id="ams-judge" class="result-judge">-</div>
     </div>
     <div style="font-size:0.82rem;color:#aaa;margin-bottom:4px;">17〜26点：なし　27〜36点：軽度<br>37〜49点：中等度　50点以上：重度</div>
-    <button class="next-btn" onclick="startADAM()">次へ：ADAMスコア →</button>
+    <button class="next-btn" id="ams-next-btn">次へ：ADAMスコア →</button>
   </div>
-
-  <!-- ADAM -->
   <div id="screen-adam" class="card" style="display:none">
     <div class="step-badge">STEP 2 / 3｜ADAM スコア</div>
     <h1>✅ ADAMスコア</h1>
@@ -124,8 +97,6 @@
     </div>
     <div id="adam-questions"></div>
   </div>
-
-  <!-- ADAM RESULT -->
   <div id="screen-adam-result" class="card" style="display:none">
     <div class="step-badge">STEP 2 完了｜ADAM スコア</div>
     <h1>✅ ADAM スコア結果</h1>
@@ -134,10 +105,8 @@
       <div id="adam-judge" class="result-judge" style="font-size:1.2rem;margin-top:8px;">-</div>
     </div>
     <div style="font-size:0.82rem;color:#aaa;margin-top:12px;">Q1（性欲）またはQ7（勃起力）が「はい」、<br>もしくはその他3項目以上「はい」で陽性</div>
-    <button class="next-btn" onclick="startQPAD()">次へ：q-PADスコア →</button>
+    <button class="next-btn" id="adam-next-btn">次へ：q-PADスコア →</button>
   </div>
-
-  <!-- q-PAD -->
   <div id="screen-qpad" class="card" style="display:none">
     <div class="step-badge">STEP 3 / 3｜q-PAD スコア</div>
     <h1>🔬 q-PADスコア</h1>
@@ -148,8 +117,6 @@
     </div>
     <div id="qpad-questions"></div>
   </div>
-
-  <!-- q-PAD RESULT -->
   <div id="screen-qpad-result" class="card" style="display:none">
     <div class="step-badge">STEP 3 完了｜q-PAD スコア</div>
     <h1>🔬 q-PAD スコア結果</h1>
@@ -159,16 +126,12 @@
       <div id="qpad-judge" class="result-judge">-</div>
     </div>
     <div style="font-size:0.82rem;color:#aaa;margin-bottom:4px;">15点以上：LOH症候群の疑いあり</div>
-    <button class="next-btn" onclick="showOverall()">総合判定を見る →</button>
+    <button class="next-btn" id="qpad-next-btn">総合判定を見る →</button>
   </div>
-
-  <!-- LOADING -->
   <div id="screen-loading" class="card" style="display:none">
     <span class="loading-icon">⏳</span>
     <div style="text-align:center;font-weight:700;color:#ff6b9d;">総合判定を計算中...</div>
   </div>
-
-  <!-- OVERALL -->
   <div id="screen-overall" class="card" style="display:none">
     <div class="step-badge">総合判定</div>
     <h1>🏆 総合判定結果</h1>
@@ -194,17 +157,18 @@
     <div class="overall-label" id="overall-label">-</div>
     <div class="comment-box" id="overall-comment">-</div>
     <p class="note">※医療診断ではありません。気になる方は専門医にご相談ください。</p>
-    <button class="retry-btn" onclick="location.reload()">もう一度チェックする 🔄</button>
+    <button class="retry-btn" id="retry-btn">もう一度チェックする 🔄</button>
   </div>
-
 </div>
+
 <script>
+// ===== 設定 =====
 const SUPABASE_URL = 'https://lnaftvhunctwyirdilez.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxuYWZ0dmh1bmN0d3lpcmRpbGV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzA5MzIsImV4cCI6MjA5MDQ0NjkzMn0.y29sz7BK4ISw9AFimbyGCCfy2dHEA7Ldkj3nf0_-3y4';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const CHUNK = 3;
 
+// ===== 質問データ =====
 const amsQuestions = [
   "総合的な調子の悪さ（健康状態の低下）",
   "関節や筋肉の痛み（腰痛、関節痛、手足の痛み、背中の痛み）",
@@ -256,6 +220,7 @@ const qpadQuestions = [
 ];
 const qpadOptions = ["なし（0点）","たまにある（1点）","よくある（2点）","ひどい（3点）"];
 
+// ===== 状態 =====
 let amsAnswers = new Array(17).fill(null);
 let adamAnswers = new Array(10).fill(null);
 let qpadAnswers = new Array(13).fill(null);
@@ -264,70 +229,71 @@ let adamVisible = CHUNK;
 let qpadVisible = CHUNK;
 let amsTotal = 0, adamPositive = false, qpadTotal = 0;
 
-function show(id) {
-  ['screen-top','screen-ams','screen-ams-result','screen-adam','screen-adam-result',
-   'screen-qpad','screen-qpad-result','screen-loading','screen-overall']
-    .forEach(s => document.getElementById(s).style.display = 'none');
+// ===== 画面切替 =====
+function showScreen(id) {
+  document.querySelectorAll('.card').forEach(c => c.style.display = 'none');
   document.getElementById(id).style.display = 'block';
   window.scrollTo(0, 0);
 }
 
-function addQuestionBlock(el, i, questions, answers, type, options, selectFn) {
+// ===== 問題描画 =====
+function renderQuestion(containerId, i, questions, answers, type, options) {
+  const el = document.getElementById(containerId);
   const block = document.createElement('div');
-  block.className = `question-block${answers[i] !== null ? ' answered' : ''}`;
-  block.id = `qb-${selectFn}-${i}`;
+  block.className = 'question-block' + (answers[i] !== null ? ' answered' : '');
+  block.id = 'qb-' + containerId + '-' + i;
 
   let optHTML = '';
   if (type === 'yn') {
-    optHTML = `<div class="options-yn">
-      <button class="opt-yn ${answers[i]===true?'selected':''}" onclick="${selectFn}(${i},true,this)">はい</button>
-      <button class="opt-yn ${answers[i]===false?'selected':''}" onclick="${selectFn}(${i},false,this)">いいえ</button>
-    </div>`;
+    optHTML = '<div class="options-yn">'
+      + '<button class="opt-yn' + (answers[i]===true?' selected':'') + '" data-qi="'+i+'" data-val="true">はい</button>'
+      + '<button class="opt-yn' + (answers[i]===false?' selected':'') + '" data-qi="'+i+'" data-val="false">いいえ</button>'
+      + '</div>';
+  } else if (type === '5') {
+    optHTML = '<div class="options-5">' + options.map((o,j) =>
+      '<button class="opt-btn' + (answers[i]===j+1?' selected':'') + '" data-qi="'+i+'" data-val="'+(j+1)+'">' + o + '</button>'
+    ).join('') + '</div>';
   } else {
-    const offset = type === '5' ? 1 : 0;
-    optHTML = `<div class="options-${type === '5' ? '5' : '4'}">${options.map((o,j) =>
-      `<button class="opt-btn ${answers[i]===j+offset?'selected':''}" onclick="${selectFn}(${i},${j+offset},this)">${o}</button>`
-    ).join('')}</div>`;
+    optHTML = '<div class="options-4">' + options.map((o,j) =>
+      '<button class="opt-btn' + (answers[i]===j?' selected':'') + '" data-qi="'+i+'" data-val="'+j+'">' + o + '</button>'
+    ).join('') + '</div>';
   }
 
-  block.innerHTML = `<div class="q-num">Q${i+1}</div><div class="q-text">${questions[i]}</div>${optHTML}`;
+  block.innerHTML = '<div class="q-num">Q'+(i+1)+'</div><div class="q-text">'+questions[i]+'</div>' + optHTML;
   el.appendChild(block);
 }
 
-function renderVisible(containerId, questions, answers, visible, type, options, selectFn) {
+function renderChunk(containerId, questions, answers, visible, type, options) {
   const el = document.getElementById(containerId);
   el.innerHTML = '';
   for (let i = 0; i < Math.min(visible, questions.length); i++) {
-    addQuestionBlock(el, i, questions, answers, type, options, selectFn);
+    renderQuestion(containerId, i, questions, answers, type, options);
   }
 }
 
 function updateProgress(answers, total, labelId, fillId) {
   const answered = answers.filter(a => a !== null).length;
-  document.getElementById(labelId).textContent = `回答済み ${answered} / ${total}`;
-  document.getElementById(fillId).style.width = `${(answered/total)*100}%`;
+  document.getElementById(labelId).textContent = '回答済み ' + answered + ' / ' + total;
+  document.getElementById(fillId).style.width = (answered / total * 100) + '%';
 }
 
-function onAnswer(qi, answers, questions, visibleRef, setVisible, containerId, type, options, selectFn, labelId, fillId, onDone) {
+function tryAdvance(containerId, answers, questions, getVisible, setVisible, type, options, labelId, fillId, onDone) {
   const total = questions.length;
   updateProgress(answers, total, labelId, fillId);
-
   const answered = answers.filter(a => a !== null).length;
-  if (answered === total) {
-    setTimeout(onDone, 400);
-    return;
-  }
-
-  // 現在の表示範囲の最後の問題に答えたら次のチャンクを表示
-  const currentVisible = visibleRef();
-  const answeredInVisible = answers.slice(0, currentVisible).filter(a => a !== null).length;
-  if (answeredInVisible === currentVisible && currentVisible < total) {
-    const newVisible = Math.min(currentVisible + CHUNK, total);
-    setVisible(newVisible);
-    renderVisible(containerId, questions, answers, newVisible, type, options, selectFn);
+  if (answered === total) { setTimeout(onDone, 400); return; }
+  const cur = getVisible();
+  const answeredInVisible = answers.slice(0, cur).filter(a => a !== null).length;
+  if (answeredInVisible === cur && cur < total) {
+    const nv = Math.min(cur + CHUNK, total);
+    setVisible(nv);
+    const el = document.getElementById(containerId);
+    for (let i = cur; i < nv; i++) {
+      renderQuestion(containerId, i, questions, answers, type, options);
+    }
     setTimeout(() => {
-      const nextBlock = document.getElementById(`qb-${selectFn}-${currentVisible}`);
-      if (nextBlock) nextBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const nb = document.getElementById('qb-' + containerId + '-' + cur);
+      if (nb) nb.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
   }
 }
@@ -335,152 +301,144 @@ function onAnswer(qi, answers, questions, visibleRef, setVisible, containerId, t
 // ===== AMS =====
 function startAMS() {
   amsVisible = CHUNK;
-  show('screen-ams');
-  renderVisible('ams-questions', amsQuestions, amsAnswers, amsVisible, '5', amsOptions, 'selectAMS');
+  showScreen('screen-ams');
+  renderChunk('ams-questions', amsQuestions, amsAnswers, amsVisible, '5', amsOptions);
 }
 
-function selectAMS(qi, val, btn) {
+document.getElementById('ams-questions').addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-qi]');
+  if (!btn) return;
+  const qi = parseInt(btn.dataset.qi);
+  const val = parseInt(btn.dataset.val);
   amsAnswers[qi] = val;
-  btn.closest('.options-5').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  const parent = btn.closest('.options-5');
+  parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   btn.closest('.question-block').classList.add('answered');
-  onAnswer(qi, amsAnswers, amsQuestions,
-    () => amsVisible, v => amsVisible = v,
-    'ams-questions', '5', amsOptions, 'selectAMS',
-    'ams-progress-label', 'ams-progress-fill', calcAMS);
-}
+  tryAdvance('ams-questions', amsAnswers, amsQuestions,
+    () => amsVisible, v => { amsVisible = v; },
+    '5', amsOptions, 'ams-progress-label', 'ams-progress-fill', calcAMS);
+});
 
 function calcAMS() {
   amsTotal = amsAnswers.reduce((s,v) => s+v, 0);
   document.getElementById('ams-score').textContent = amsTotal;
-  const judgeEl = document.getElementById('ams-judge');
-  if (amsTotal <= 26) { judgeEl.textContent='なし'; judgeEl.className='result-judge judge-none'; }
-  else if (amsTotal <= 36) { judgeEl.textContent='軽度'; judgeEl.className='result-judge judge-mild'; }
-  else if (amsTotal <= 49) { judgeEl.textContent='中等度'; judgeEl.className='result-judge judge-moderate'; }
-  else { judgeEl.textContent='重度'; judgeEl.className='result-judge judge-severe'; }
-  show('screen-ams-result');
+  const j = document.getElementById('ams-judge');
+  if (amsTotal<=26){j.textContent='なし';j.className='result-judge judge-none';}
+  else if(amsTotal<=36){j.textContent='軽度';j.className='result-judge judge-mild';}
+  else if(amsTotal<=49){j.textContent='中等度';j.className='result-judge judge-moderate';}
+  else{j.textContent='重度';j.className='result-judge judge-severe';}
+  showScreen('screen-ams-result');
 }
 
 // ===== ADAM =====
 function startADAM() {
   adamVisible = CHUNK;
-  show('screen-adam');
-  renderVisible('adam-questions', adamQuestions, adamAnswers, adamVisible, 'yn', [], 'selectADAM');
+  showScreen('screen-adam');
+  renderChunk('adam-questions', adamQuestions, adamAnswers, adamVisible, 'yn', []);
 }
 
-function selectADAM(qi, val, btn) {
+document.getElementById('adam-questions').addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-qi]');
+  if (!btn) return;
+  const qi = parseInt(btn.dataset.qi);
+  const val = btn.dataset.val === 'true';
   adamAnswers[qi] = val;
-  btn.closest('.options-yn').querySelectorAll('.opt-yn').forEach(b => b.classList.remove('selected'));
+  const parent = btn.closest('.options-yn');
+  parent.querySelectorAll('.opt-yn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   btn.closest('.question-block').classList.add('answered');
-  onAnswer(qi, adamAnswers, adamQuestions,
-    () => adamVisible, v => adamVisible = v,
-    'adam-questions', 'yn', [], 'selectADAM',
-    'adam-progress-label', 'adam-progress-fill', calcADAM);
-}
+  tryAdvance('adam-questions', adamAnswers, adamQuestions,
+    () => adamVisible, v => { adamVisible = v; },
+    'yn', [], 'adam-progress-label', 'adam-progress-fill', calcADAM);
+});
 
 function calcADAM() {
-  const q1 = adamAnswers[0], q7 = adamAnswers[6];
-  const othersYes = adamAnswers.filter((v,i) => i!==0 && i!==6 && v===true).length;
-  adamPositive = q1 || q7 || othersYes >= 3;
-  const judgeEl = document.getElementById('adam-judge');
-  if (adamPositive) { judgeEl.textContent='陽性（テストステロン低下の疑いあり）'; judgeEl.className='result-judge judge-positive'; }
-  else { judgeEl.textContent='陰性（疑いなし）'; judgeEl.className='result-judge judge-negative'; }
-  show('screen-adam-result');
+  adamPositive = adamAnswers[0] || adamAnswers[6] || adamAnswers.filter((v,i)=>i!==0&&i!==6&&v===true).length >= 3;
+  const j = document.getElementById('adam-judge');
+  if(adamPositive){j.textContent='陽性（テストステロン低下の疑いあり）';j.className='result-judge judge-positive';}
+  else{j.textContent='陰性（疑いなし）';j.className='result-judge judge-negative';}
+  showScreen('screen-adam-result');
 }
 
 // ===== q-PAD =====
 function startQPAD() {
   qpadVisible = CHUNK;
-  show('screen-qpad');
-  renderVisible('qpad-questions', qpadQuestions, qpadAnswers, qpadVisible, '4', qpadOptions, 'selectQPAD');
+  showScreen('screen-qpad');
+  renderChunk('qpad-questions', qpadQuestions, qpadAnswers, qpadVisible, '4', qpadOptions);
 }
 
-function selectQPAD(qi, val, btn) {
+document.getElementById('qpad-questions').addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-qi]');
+  if (!btn) return;
+  const qi = parseInt(btn.dataset.qi);
+  const val = parseInt(btn.dataset.val);
   qpadAnswers[qi] = val;
-  btn.closest('.options-4').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  const parent = btn.closest('.options-4');
+  parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   btn.closest('.question-block').classList.add('answered');
-  onAnswer(qi, qpadAnswers, qpadQuestions,
-    () => qpadVisible, v => qpadVisible = v,
-    'qpad-questions', '4', qpadOptions, 'selectQPAD',
-    'qpad-progress-label', 'qpad-progress-fill', calcQPAD);
-}
+  tryAdvance('qpad-questions', qpadAnswers, qpadQuestions,
+    () => qpadVisible, v => { qpadVisible = v; },
+    '4', qpadOptions, 'qpad-progress-label', 'qpad-progress-fill', calcQPAD);
+});
 
 function calcQPAD() {
   qpadTotal = qpadAnswers.reduce((s,v) => s+v, 0);
   document.getElementById('qpad-score').textContent = qpadTotal;
-  const judgeEl = document.getElementById('qpad-judge');
-  if (qpadTotal < 15) { judgeEl.textContent='基準値以下'; judgeEl.className='result-judge judge-none'; }
-  else { judgeEl.textContent='LOH症候群の疑いあり'; judgeEl.className='result-judge judge-severe'; }
-  show('screen-qpad-result');
+  const j = document.getElementById('qpad-judge');
+  if(qpadTotal<15){j.textContent='基準値以下';j.className='result-judge judge-none';}
+  else{j.textContent='LOH症候群の疑いあり';j.className='result-judge judge-severe';}
+  showScreen('screen-qpad-result');
 }
 
 // ===== 総合判定 =====
 function calcGrade() {
-  let pts = 0;
-  if (amsTotal <= 26) pts += 0;
-  else if (amsTotal <= 36) pts += 1;
-  else if (amsTotal <= 49) pts += 2;
-  else pts += 3;
-  if (adamPositive) pts += 2;
-  if (qpadTotal < 15) pts += 0;
-  else if (qpadTotal < 25) pts += 1;
-  else if (qpadTotal < 32) pts += 2;
-  else pts += 3;
-  if (pts === 0) return 'A';
-  if (pts <= 2) return 'B';
-  if (pts <= 4) return 'C';
-  if (pts <= 6) return 'D';
-  return 'E';
+  let p = 0;
+  if(amsTotal>49)p+=3; else if(amsTotal>36)p+=2; else if(amsTotal>26)p+=1;
+  if(adamPositive)p+=2;
+  if(qpadTotal>=32)p+=3; else if(qpadTotal>=25)p+=2; else if(qpadTotal>=15)p+=1;
+  if(p===0)return'A'; if(p<=2)return'B'; if(p<=4)return'C'; if(p<=6)return'D'; return'E';
 }
 
-function gradeLabel(g) {
-  return {A:'非常に良好',B:'概ね良好',C:'やや注意が必要',D:'注意が必要',E:'早めに専門医へ相談を'}[g];
-}
-
-function gradeComment(g) {
-  return {
-    A:'3つのスコアがいずれも基準値内です。\n現在の生活習慣を続けながら、定期的にセルフチェックを行いましょう。',
-    B:'いくつかの項目で軽度の変化が見られます。\n睡眠・運動・食事のバランスを意識することで改善が期待できます。',
-    C:'複数のスコアで注意すべき値が出ています。\n生活習慣の見直しを検討してください。気になる症状が続く場合は専門医への相談も選択肢です。',
-    D:'複数のスコアで顕著な変化が見られます。\n男性ホルモンの低下が影響している可能性があります。専門医（泌尿器科・メンズヘルス外来）への相談をお勧めします。',
-    E:'3つのスコアが全体的に高い値を示しています。\nLOH症候群（男性更年期障害）の可能性があります。できるだけ早めに泌尿器科やメンズヘルス専門外来を受診されることをお勧めします。'
-  }[g];
-}
+const gradeLabels = {A:'非常に良好',B:'概ね良好',C:'やや注意が必要',D:'注意が必要',E:'早めに専門医へ相談を'};
+const gradeComments = {
+  A:'3つのスコアがいずれも基準値内です。\n現在の生活習慣を続けながら、定期的にセルフチェックを行いましょう。',
+  B:'いくつかの項目で軽度の変化が見られます。\n睡眠・運動・食事のバランスを意識することで改善が期待できます。',
+  C:'複数のスコアで注意すべき値が出ています。\n生活習慣の見直しを検討してください。専門医への相談も選択肢です。',
+  D:'複数のスコアで顕著な変化が見られます。\n専門医（泌尿器科・メンズヘルス外来）への相談をお勧めします。',
+  E:'3つのスコアが全体的に高い値を示しています。\nできるだけ早めに泌尿器科やメンズヘルス専門外来を受診されることをお勧めします。'
+};
 
 async function showOverall() {
-  show('screen-loading');
+  showScreen('screen-loading');
   const grade = calcGrade();
   const amsJudge = amsTotal<=26?'なし':amsTotal<=36?'軽度':amsTotal<=49?'中等度':'重度';
   const qpadJudge = qpadTotal<15?'基準値以下':'LOH症候群の疑いあり';
-
-  await sb.from('scores').insert({
-    ams_score: amsTotal,
-    ams_judge: amsJudge,
-    adam_positive: adamPositive,
-    qpad_score: qpadTotal,
-    qpad_judge: qpadJudge,
-    overall_grade: grade
-  });
-
+  await sb.from('scores').insert({ams_score:amsTotal,ams_judge:amsJudge,adam_positive:adamPositive,qpad_score:qpadTotal,qpad_judge:qpadJudge,overall_grade:grade});
   setTimeout(() => {
     document.getElementById('r-ams-score').textContent = amsTotal;
-    const ramsJ = document.getElementById('r-ams-judge');
-    ramsJ.textContent = amsJudge;
-    ramsJ.className = `result-judge ${amsTotal<=26?'judge-none':amsTotal<=36?'judge-mild':amsTotal<=49?'judge-moderate':'judge-severe'}`;
-    const radamJ = document.getElementById('r-adam-judge');
-    radamJ.textContent = adamPositive?'陽性':'陰性';
-    radamJ.className = `result-judge ${adamPositive?'judge-positive':'judge-negative'}`;
+    const rj = document.getElementById('r-ams-judge');
+    rj.textContent=amsJudge; rj.className='result-judge '+(amsTotal<=26?'judge-none':amsTotal<=36?'judge-mild':amsTotal<=49?'judge-moderate':'judge-severe');
+    const aj = document.getElementById('r-adam-judge');
+    aj.textContent=adamPositive?'陽性':'陰性'; aj.className='result-judge '+(adamPositive?'judge-positive':'judge-negative');
     document.getElementById('r-qpad-score').textContent = qpadTotal;
-    const rqpadJ = document.getElementById('r-qpad-judge');
-    rqpadJ.textContent = qpadJudge;
-    rqpadJ.className = `result-judge ${qpadTotal<15?'judge-none':'judge-severe'}`;
-    const gradeEl = document.getElementById('overall-grade');
-    gradeEl.textContent = grade;
-    gradeEl.className = `overall-grade grade-${grade}`;
-    document.getElementById('overall-label').textContent = gradeLabel(grade);
-    document.getElementById('overall-comment').textContent = gradeComment(grade);
-    show('screen-overall');
+    const qj = document.getElementById('r-qpad-judge');
+    qj.textContent=qpadJudge; qj.className='result-judge '+(qpadTotal<15?'judge-none':'judge-severe');
+    const ge = document.getElementById('overall-grade');
+    ge.textContent=grade; ge.className='overall-grade grade-'+grade;
+    document.getElementById('overall-label').textContent=gradeLabels[grade];
+    document.getElementById('overall-comment').textContent=gradeComments[grade];
+    showScreen('screen-overall');
   }, 1500);
 }
+
+// ===== ボタン =====
+document.getElementById('start-btn').addEventListener('click', startAMS);
+document.getElementById('ams-next-btn').addEventListener('click', startADAM);
+document.getElementById('adam-next-btn').addEventListener('click', startQPAD);
+document.getElementById('qpad-next-btn').addEventListener('click', showOverall);
+document.getElementById('retry-btn').addEventListener('click', () => location.reload());
+</script>
+</body>
+</html>
