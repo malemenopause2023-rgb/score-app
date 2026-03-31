@@ -259,6 +259,9 @@ const qpadOptions = ["なし（0点）","たまにある（1点）","よくあ�
 let amsAnswers = new Array(17).fill(null);
 let adamAnswers = new Array(10).fill(null);
 let qpadAnswers = new Array(13).fill(null);
+let amsVisible = CHUNK;
+let adamVisible = CHUNK;
+let qpadVisible = CHUNK;
 let amsTotal = 0, adamPositive = false, qpadTotal = 0;
 
 function show(id) {
@@ -269,52 +272,34 @@ function show(id) {
   window.scrollTo(0, 0);
 }
 
-// 3問ずつ表示する共通関数
-function renderChunked(questions, answers, containerId, optionsType, optionsData, selectFn, progressLabelId, progressFillId, onAllDone) {
+function addQuestionBlock(el, i, questions, answers, type, options, selectFn) {
+  const block = document.createElement('div');
+  block.className = `question-block${answers[i] !== null ? ' answered' : ''}`;
+  block.id = `qb-${selectFn}-${i}`;
+
+  let optHTML = '';
+  if (type === 'yn') {
+    optHTML = `<div class="options-yn">
+      <button class="opt-yn ${answers[i]===true?'selected':''}" onclick="${selectFn}(${i},true,this)">はい</button>
+      <button class="opt-yn ${answers[i]===false?'selected':''}" onclick="${selectFn}(${i},false,this)">いいえ</button>
+    </div>`;
+  } else {
+    const offset = type === '5' ? 1 : 0;
+    optHTML = `<div class="options-${type === '5' ? '5' : '4'}">${options.map((o,j) =>
+      `<button class="opt-btn ${answers[i]===j+offset?'selected':''}" onclick="${selectFn}(${i},${j+offset},this)">${o}</button>`
+    ).join('')}</div>`;
+  }
+
+  block.innerHTML = `<div class="q-num">Q${i+1}</div><div class="q-text">${questions[i]}</div>${optHTML}`;
+  el.appendChild(block);
+}
+
+function renderVisible(containerId, questions, answers, visible, type, options, selectFn) {
   const el = document.getElementById(containerId);
   el.innerHTML = '';
-  const total = questions.length;
-  let visibleUpTo = 0;
-
-  // 何問目まで表示するか計算
-  for (let i = 0; i < total; i++) {
-    if (answers[i] !== null) visibleUpTo = i + 1;
-    else break;
+  for (let i = 0; i < Math.min(visible, questions.length); i++) {
+    addQuestionBlock(el, i, questions, answers, type, options, selectFn);
   }
-   // 次の未回答問題を含むチャンクまで表示
-  visibleUpTo = Math.min(Math.ceil((visibleUpTo + 1) / CHUNK) * CHUNK, total);
-  visibleUpTo = Math.max(visibleUpTo, CHUNK);
-
-  for (let i = 0; i < visibleUpTo; i++) {
-    const block = document.createElement('div');
-    block.className = `question-block${answers[i] !== null ? ' answered' : ''}`;
-    block.id = `qblock-${containerId}-${i}`;
-
-    let optionsHTML = '';
-    if (optionsType === 'yn') {
-      optionsHTML = `<div class="options-yn">
-        <button class="opt-yn ${answers[i]===true?'selected':''}" onclick="${selectFn}(${i},true,this)">はい</button>
-        <button class="opt-yn ${answers[i]===false?'selected':''}" onclick="${selectFn}(${i},false,this)">いいえ</button>
-      </div>`;
-    } else {
-      optionsHTML = `<div class="${optionsType}">${optionsData.map((o,j) =>
-        `<button class="opt-btn ${answers[i]===j+(optionsType==='options-5'?1:0)?'selected':''}" onclick="${selectFn}(${i},${j+(optionsType==='options-5'?1:0)},this)">${o}</button>`
-      ).join('')}</div>`;
-    }
-
-    block.innerHTML = `<div class="q-num">Q${i+1}</div><div class="q-text">${questions[i]}</div>${optionsHTML}`;
-    el.appendChild(block);
-
-    // 3問ごとに区切り線
-    if ((i + 1) % CHUNK === 0 && i + 1 < visibleUpTo) {
-      const div = document.createElement('div');
-      div.className = 'chunk-divider';
-      div.textContent = `✅ ${i+1}問完了`;
-      el.appendChild(div);
-    }
-  }
-
-  updateProgress(answers, total, progressLabelId, progressFillId);
 }
 
 function updateProgress(answers, total, labelId, fillId) {
@@ -323,36 +308,35 @@ function updateProgress(answers, total, labelId, fillId) {
   document.getElementById(fillId).style.width = `${(answered/total)*100}%`;
 }
 
-function afterSelect(answers, questions, containerId, optionsType, optionsData, selectFn, progressLabelId, progressFillId, qi, onAllDone) {
+function onAnswer(qi, answers, questions, visibleRef, setVisible, containerId, type, options, selectFn, labelId, fillId, onDone) {
   const total = questions.length;
-  const answered = answers.filter(a => a !== null).length;
-  updateProgress(answers, total, progressLabelId, progressFillId);
+  updateProgress(answers, total, labelId, fillId);
 
-  // 全問回答済み
+  const answered = answers.filter(a => a !== null).length;
   if (answered === total) {
-    setTimeout(onAllDone, 400);
+    setTimeout(onDone, 400);
     return;
   }
 
-  // 次の3問グループの先頭かどうか
-  const nextIndex = qi + 1;
-  if (nextIndex < total && answers[nextIndex] === null) {
-    const chunkStart = Math.floor(nextIndex / CHUNK) * CHUNK;
-    if (nextIndex === chunkStart) {
-      // 新しいチャンクを追加表示
-      renderChunked(questions, answers, containerId, optionsType, optionsData, selectFn, progressLabelId, progressFillId, onAllDone);
-      setTimeout(() => {
-        const nextBlock = document.getElementById(`qblock-${containerId}-${nextIndex}`);
-        if (nextBlock) nextBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
-    }
+  // 現在の表示範囲の最後の問題に答えたら次のチャンクを表示
+  const currentVisible = visibleRef();
+  const answeredInVisible = answers.slice(0, currentVisible).filter(a => a !== null).length;
+  if (answeredInVisible === currentVisible && currentVisible < total) {
+    const newVisible = Math.min(currentVisible + CHUNK, total);
+    setVisible(newVisible);
+    renderVisible(containerId, questions, answers, newVisible, type, options, selectFn);
+    setTimeout(() => {
+      const nextBlock = document.getElementById(`qb-${selectFn}-${currentVisible}`);
+      if (nextBlock) nextBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   }
 }
 
 // ===== AMS =====
 function startAMS() {
+  amsVisible = CHUNK;
   show('screen-ams');
-  renderChunked(amsQuestions, amsAnswers, 'ams-questions', 'options-5', amsOptions, 'selectAMS', 'ams-progress-label', 'ams-progress-fill', calcAMS);
+  renderVisible('ams-questions', amsQuestions, amsAnswers, amsVisible, '5', amsOptions, 'selectAMS');
 }
 
 function selectAMS(qi, val, btn) {
@@ -360,7 +344,10 @@ function selectAMS(qi, val, btn) {
   btn.closest('.options-5').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   btn.closest('.question-block').classList.add('answered');
-  afterSelect(amsAnswers, amsQuestions, 'ams-questions', 'options-5', amsOptions, 'selectAMS', 'ams-progress-label', 'ams-progress-fill', qi, calcAMS);
+  onAnswer(qi, amsAnswers, amsQuestions,
+    () => amsVisible, v => amsVisible = v,
+    'ams-questions', '5', amsOptions, 'selectAMS',
+    'ams-progress-label', 'ams-progress-fill', calcAMS);
 }
 
 function calcAMS() {
@@ -376,8 +363,9 @@ function calcAMS() {
 
 // ===== ADAM =====
 function startADAM() {
+  adamVisible = CHUNK;
   show('screen-adam');
-  renderChunked(adamQuestions, adamAnswers, 'adam-questions', 'yn', [], 'selectADAM', 'adam-progress-label', 'adam-progress-fill', calcADAM);
+  renderVisible('adam-questions', adamQuestions, adamAnswers, adamVisible, 'yn', [], 'selectADAM');
 }
 
 function selectADAM(qi, val, btn) {
@@ -385,7 +373,10 @@ function selectADAM(qi, val, btn) {
   btn.closest('.options-yn').querySelectorAll('.opt-yn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   btn.closest('.question-block').classList.add('answered');
-  afterSelect(adamAnswers, adamQuestions, 'adam-questions', 'yn', [], 'selectADAM', 'adam-progress-label', 'adam-progress-fill', qi, calcADAM);
+  onAnswer(qi, adamAnswers, adamQuestions,
+    () => adamVisible, v => adamVisible = v,
+    'adam-questions', 'yn', [], 'selectADAM',
+    'adam-progress-label', 'adam-progress-fill', calcADAM);
 }
 
 function calcADAM() {
@@ -400,8 +391,9 @@ function calcADAM() {
 
 // ===== q-PAD =====
 function startQPAD() {
+  qpadVisible = CHUNK;
   show('screen-qpad');
-  renderChunked(qpadQuestions, qpadAnswers, 'qpad-questions', 'options-4', qpadOptions, 'selectQPAD', 'qpad-progress-label', 'qpad-progress-fill', calcQPAD);
+  renderVisible('qpad-questions', qpadQuestions, qpadAnswers, qpadVisible, '4', qpadOptions, 'selectQPAD');
 }
 
 function selectQPAD(qi, val, btn) {
@@ -409,7 +401,10 @@ function selectQPAD(qi, val, btn) {
   btn.closest('.options-4').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   btn.closest('.question-block').classList.add('answered');
-  afterSelect(qpadAnswers, qpadQuestions, 'qpad-questions', 'options-4', qpadOptions, 'selectQPAD', 'qpad-progress-label', 'qpad-progress-fill', qi, calcQPAD);
+  onAnswer(qi, qpadAnswers, qpadQuestions,
+    () => qpadVisible, v => qpadVisible = v,
+    'qpad-questions', '4', qpadOptions, 'selectQPAD',
+    'qpad-progress-label', 'qpad-progress-fill', calcQPAD);
 }
 
 function calcQPAD() {
@@ -489,6 +484,3 @@ async function showOverall() {
     show('screen-overall');
   }, 1500);
 }
-</script>
-</body>
-</html>
