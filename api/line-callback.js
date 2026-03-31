@@ -3,7 +3,6 @@ module.exports = async function handler(req, res) {
     const { code } = req.query
     if (!code) return res.status(400).send('No code')
 
-    // アクセストークン取得
     const tokenRes = await fetch('https://api.line.me/oauth2/v2.1/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -16,25 +15,26 @@ module.exports = async function handler(req, res) {
       })
     })
     const tokenData = await tokenRes.json()
-    console.log('tokenData:', JSON.stringify(tokenData))
 
     if (!tokenData.access_token) {
       return res.status(500).send('Token error: ' + JSON.stringify(tokenData))
     }
 
-    // プロフィール取得
     const profileRes = await fetch('https://api.line.me/v2/profile', {
       headers: { Authorization: `Bearer ${tokenData.access_token}` }
     })
     const profile = await profileRes.json()
-    console.log('profile:', JSON.stringify(profile))
 
     if (!profile.userId) {
       return res.status(500).send('Profile error: ' + JSON.stringify(profile))
     }
 
-    // クッキーにセット
-    res.setHeader('Set-Cookie', `line_uid=${profile.userId}; Path=/; Max-Age=31536000`)
+    // UID と名前をクッキーに保存
+    const cookies = [
+      `line_uid=${profile.userId}; Path=/; Max-Age=31536000`,
+      `line_name=${encodeURIComponent(profile.displayName)}; Path=/; Max-Age=31536000`
+    ]
+    res.setHeader('Set-Cookie', cookies)
     res.redirect('/')
 
   } catch (err) {
