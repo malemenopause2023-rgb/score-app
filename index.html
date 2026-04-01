@@ -65,6 +65,8 @@
     .line-btn:hover { opacity: 0.9; transform: translateY(-1px); }
     .skip-btn { width: 100%; padding: 12px; background: transparent; color: #3a4f65; border: 1px solid #2a3a50; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.18s; }
     .skip-btn:hover { background: #1e2e42; color: #5a8fc0; }
+    .age-select { width: 100%; padding: 12px; background: #0f1923; border: 1px solid #2a3a50; border-radius: 8px; color: #e8edf2; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; outline: none; cursor: pointer; appearance: none; }
+    .age-select option { background: #1a2535; }
   </style>
 </head>
 <body>
@@ -83,10 +85,11 @@
         RESULT｜総合判定（A〜E）
       </div>
     </div>
-  <div style="margin-bottom:16px;">
+
+    <!-- 年代選択 -->
+    <div style="margin-bottom:16px;">
       <div style="font-size:0.82rem;font-weight:700;color:#2e86de;margin-bottom:8px;">📋 年代を選択してください</div>
-      <select id="age-group"
-        style="width:100%;padding:12px;background:#0f1923;border:1px solid #2a3a50;border-radius:8px;color:#e8edf2;font-family:'Noto Sans JP',sans-serif;font-size:0.88rem;outline:none;cursor:pointer;">
+      <select id="age-group" class="age-select">
         <option value="">--- 選択してください ---</option>
         <option value="20代前半">20代前半（20〜24歳）</option>
         <option value="20代半ば">20代半ば（25〜27歳）</option>
@@ -187,7 +190,6 @@
     <div class="overall-label" id="overall-label">-</div>
     <div class="comment-box" id="overall-comment">-</div>
 
-    <!-- 結果共有ボックス -->
     <div class="share-box">
       <div class="share-box-title">🔗 結果を専門医に共有する</div>
       <div class="share-box-desc">このURLを医師やご家族に送ることで、設問ごとの詳細な結果を共有できます。</div>
@@ -275,6 +277,8 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function lineLogin() {
+  const age = document.getElementById('age-group').value;
+  if (!age) { alert('年代を選択してください'); return; }
   const params = new URLSearchParams({
     response_type: 'code',
     client_id: '2009657612',
@@ -283,6 +287,12 @@ function lineLogin() {
     scope: 'profile'
   });
   window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?' + params.toString();
+}
+
+function checkAgeAndStart() {
+  const age = document.getElementById('age-group').value;
+  if (!age) { alert('年代を選択してください'); return; }
+  startAMS();
 }
 
 function showScreen(id) {
@@ -418,6 +428,7 @@ async function showOverall() {
   const grade = calcGrade();
   const amsJudge = amsTotal<=26?'なし':amsTotal<=36?'軽度':amsTotal<=49?'中等度':'重度';
   const qpadJudge = qpadTotal<15?'基準値以下':'LOH症候群の疑いあり';
+  const ageGroup = document.getElementById('age-group').value;
 
   const saveRes = await fetch('/api/save-score', {
     method: 'POST',
@@ -427,6 +438,7 @@ async function showOverall() {
       adam_positive: adamPositive,
       qpad_score: qpadTotal, qpad_judge: qpadJudge,
       overall_grade: grade,
+      age_group: ageGroup,
       ams_answers: amsAnswers,
       adam_answers: adamAnswers,
       qpad_answers: qpadAnswers
@@ -452,9 +464,9 @@ async function showOverall() {
   },1500);
 }
 
-document.getElementById('start-btn').addEventListener('click', startAMS);
+document.getElementById('start-btn').addEventListener('click', checkAgeAndStart);
 document.getElementById('line-login-btn').addEventListener('click', lineLogin);
-document.getElementById('skip-btn').addEventListener('click', startAMS);
+document.getElementById('skip-btn').addEventListener('click', checkAgeAndStart);
 document.getElementById('retry-btn').addEventListener('click', ()=>location.reload());
 
 document.getElementById('copy-url-btn').addEventListener('click', () => {
