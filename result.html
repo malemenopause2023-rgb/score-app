@@ -126,10 +126,12 @@ async function load() {
   const { score, details } = await res.json();
 
   // 日時
-  const date = new Date(score.created_at);
-  const jst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
-  const dateStr = jst.getFullYear() + '年' + (jst.getMonth()+1) + '月' + jst.getDate() + '日 '
-    + jst.getHours() + ':' + String(jst.getMinutes()).padStart(2,'0');
+const raw = score.created_at.substring(0, 16);
+  const [d, t] = raw.split('T');
+  const [y, mo, da] = d.split('-');
+  const [h, m] = t.split(':');
+  const jstH = (parseInt(h) + 9) % 24;
+  const dateStr = y + '年' + parseInt(mo) + '月' + parseInt(da) + '日 ' + jstH + ':' + m;
   
   // 総合判定
   const grade = score.overall_grade;
