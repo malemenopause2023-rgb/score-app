@@ -220,7 +220,7 @@ const amsQuestions = [
   "早朝勃起（朝立ち）の回数の減少",
   "性欲の低下（セックスがしたくない、性的な楽しみがない）"
 ];
-const amsOptions = ["なし（1点）","軽い（2点）","中等度（3点）","重い（4点）","きわめて重い（5点）"];
+const amsOptions = ["なし","軽い","中等度","重い","きわめて重い"];
 
 const adamQuestions = [
   "性欲の低下がありますか？",
@@ -250,7 +250,7 @@ const qpadQuestions = [
   "勃起力の低下",
   "射精感の低下"
 ];
-const qpadOptions = ["なし（0点）","たまにある（1点）","よくある（2点）","ひどい（3点）"];
+const qpadOptions = ["なし","たまにある","よくある","ひどい"];
 
 let amsAnswers = new Array(17).fill(null);
 let adamAnswers = new Array(10).fill(null);
@@ -433,7 +433,17 @@ async function showOverall() {
   await fetch('/api/save-score', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ams_score:amsTotal,ams_judge:amsJudge,adam_positive:adamPositive,qpad_score:qpadTotal,qpad_judge:qpadJudge,overall_grade:grade})
+    body: JSON.stringify({
+      ams_score: amsTotal,
+      ams_judge: amsJudge,
+      adam_positive: adamPositive,
+      qpad_score: qpadTotal,
+      qpad_judge: qpadJudge,
+      overall_grade: grade,
+      ams_answers: amsAnswers,
+      adam_answers: adamAnswers,
+      qpad_answers: qpadAnswers
+    })
   });
   setTimeout(()=>{
     document.getElementById('r-ams-score').textContent=amsTotal;
