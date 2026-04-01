@@ -31,10 +31,6 @@
     .opt-yn.selected { background: linear-gradient(135deg,#1e5fa8,#2e86de); border-color: #2e86de; color: white; }
     .next-btn, .start-btn { width: 100%; padding: 16px; background: linear-gradient(135deg,#1e5fa8,#2e86de); color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 20px; letter-spacing: 0.05em; transition: all 0.18s; }
     .next-btn:hover, .start-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-    .line-btn { width: 100%; padding: 16px; background: #06C755; color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 12px; letter-spacing: 0.05em; transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .line-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-    .skip-btn { width: 100%; padding: 12px; background: transparent; color: #3a4f65; border: 1px solid #2a3a50; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.18s; }
-    .skip-btn:hover { background: #1e2e42; color: #5a8fc0; }
     .result-section { margin-bottom: 20px; }
     .result-title { font-size: 0.85rem; font-weight: 700; color: #5a8fc0; margin-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase; }
     .result-score { font-size: 2.2rem; font-weight: 900; color: #e8edf2; }
@@ -59,6 +55,10 @@
     .info-box-title { font-size: 0.78rem; font-weight: 700; color: #2e86de; margin-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase; }
     .info-box-body { font-size: 0.83rem; color: #6a8099; line-height: 1.9; }
     .user-badge { background: #0f1923; border: 1px solid #1e5fa8; border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; color: #2e86de; font-weight: 700; margin-bottom: 16px; display: none; }
+    .line-btn { width: 100%; padding: 16px; background: #06C755; color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 12px; letter-spacing: 0.05em; transition: all 0.18s; }
+    .line-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .skip-btn { width: 100%; padding: 12px; background: transparent; color: #3a4f65; border: 1px solid #2a3a50; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.18s; }
+    .skip-btn:hover { background: #1e2e42; color: #5a8fc0; }
   </style>
 </head>
 <body>
@@ -67,7 +67,7 @@
   <div id="screen-top" class="card">
     <div class="step-badge">MENS HEALTH CHECK</div>
     <h1>男性ホルモン<br>セルフチェック</h1>
-    <p class="desc">AMS・ADAM・q-PADの3種類の国際的な指標で、男性ホルモンの状態を総合的にチェックします。3問ずつ表示されます。</p>
+    <p class="desc">AMS・ADAM・q-PADの3種類の国際的な指標で、男性ホルモンの状態を総合的にチェックします。2問ずつ表示されます。</p>
     <div class="info-box">
       <div class="info-box-title">📋 チェックの流れ</div>
       <div class="info-box-body">
@@ -80,11 +80,11 @@
     <div class="user-badge" id="user-badge">✅ LINEでログイン済み</div>
     <button class="start-btn" id="start-btn">チェックを開始する →</button>
     <button class="line-btn" id="line-login-btn">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.03 2 11c0 3.08 1.67 5.77 4.19 7.4L5.5 22l3.79-1.97C10.1 20.63 11.03 21 12 21c5.52 0 10-4.03 10-9s-4.48-9-10-9z"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white" style="margin-right:8px;vertical-align:middle"><path d="M12 2C6.48 2 2 6.03 2 11c0 3.08 1.67 5.77 4.19 7.4L5.5 22l3.79-1.97C10.1 20.63 11.03 21 12 21c5.52 0 10-4.03 10-9s-4.48-9-10-9z"/></svg>
       LINEでログインして記録を残す
     </button>
     <button class="skip-btn" id="skip-btn">ログインせずに始める</button>
-    <p class="note">※このチェックは医療診断ではありません。結果はあくまで目安としてご活用ください。</p>
+    <p class="note">※このチェックは医療診断ではありません。</p>
   </div>
 
   <!-- AMS -->
@@ -99,19 +99,6 @@
     <div id="ams-questions"></div>
   </div>
 
-  <!-- AMS RESULT -->
-  <div id="screen-ams-result" class="card" style="display:none">
-    <div class="step-badge">STEP 1 COMPLETE</div>
-    <h1>AMSスコア 結果</h1>
-    <div class="result-section">
-      <div class="result-title">TOTAL SCORE</div>
-      <div class="result-score"><span id="ams-score">0</span> <span style="font-size:1rem;color:#5a8fc0;">点</span></div>
-      <div id="ams-judge" class="result-judge">-</div>
-    </div>
-    <div style="font-size:0.78rem;color:#3a4f65;margin-bottom:4px;line-height:1.8;">17〜26点：なし　／　27〜36点：軽度<br>37〜49点：中等度　／　50点以上：重度</div>
-    <button class="next-btn" id="ams-next-btn">次へ：ADAMスコア →</button>
-  </div>
-
   <!-- ADAM -->
   <div id="screen-adam" class="card" style="display:none">
     <div class="step-badge">STEP 2 / 3 — ADAM SCORE</div>
@@ -124,18 +111,6 @@
     <div id="adam-questions"></div>
   </div>
 
-  <!-- ADAM RESULT -->
-  <div id="screen-adam-result" class="card" style="display:none">
-    <div class="step-badge">STEP 2 COMPLETE</div>
-    <h1>ADAMスコア 結果</h1>
-    <div class="result-section">
-      <div class="result-title">JUDGMENT</div>
-      <div id="adam-judge" class="result-judge" style="font-size:1rem;margin-top:8px;">-</div>
-    </div>
-    <div style="font-size:0.78rem;color:#3a4f65;margin-top:12px;line-height:1.8;">Q1（性欲）またはQ7（勃起力）が「はい」、<br>もしくはその他3項目以上「はい」で陽性</div>
-    <button class="next-btn" id="adam-next-btn">次へ：q-PADスコア →</button>
-  </div>
-
   <!-- q-PAD -->
   <div id="screen-qpad" class="card" style="display:none">
     <div class="step-badge">STEP 3 / 3 — q-PAD SCORE</div>
@@ -146,19 +121,6 @@
       <div class="progress-bar"><div class="progress-fill" id="qpad-progress-fill" style="width:0%"></div></div>
     </div>
     <div id="qpad-questions"></div>
-  </div>
-
-  <!-- q-PAD RESULT -->
-  <div id="screen-qpad-result" class="card" style="display:none">
-    <div class="step-badge">STEP 3 COMPLETE</div>
-    <h1>q-PADスコア 結果</h1>
-    <div class="result-section">
-      <div class="result-title">TOTAL SCORE</div>
-      <div class="result-score"><span id="qpad-score">0</span> <span style="font-size:1rem;color:#5a8fc0;">点</span></div>
-      <div id="qpad-judge" class="result-judge">-</div>
-    </div>
-    <div style="font-size:0.78rem;color:#3a4f65;margin-bottom:4px;">15点以上：LOH症候群の疑いあり</div>
-    <button class="next-btn" id="qpad-next-btn">総合判定を見る →</button>
   </div>
 
   <!-- LOADING -->
@@ -198,8 +160,7 @@
 </div>
 
 <script>
-const CHUNK = 3;
-const LINE_CLIENT_ID = document.currentScript.getAttribute('data-line-id') || '';
+const CHUNK = 2;
 
 const amsQuestions = [
   "総合的な調子の悪さ（健康状態の低下）",
@@ -258,7 +219,6 @@ let qpadAnswers = new Array(13).fill(null);
 let amsVisible = CHUNK, adamVisible = CHUNK, qpadVisible = CHUNK;
 let amsTotal = 0, adamPositive = false, qpadTotal = 0;
 
-// LINEログイン済みか確認
 function getLineUid() {
   return document.cookie.split(';').map(c=>c.trim()).find(c=>c.startsWith('line_uid='))?.split('=')[1] || null;
 }
@@ -273,12 +233,11 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function lineLogin() {
-  const state = Math.random().toString(36).substring(2);
   const params = new URLSearchParams({
     response_type: 'code',
     client_id: '2009657612',
     redirect_uri: window.location.origin + '/api/line-callback',
-    state,
+    state: Math.random().toString(36).substring(2),
     scope: 'profile'
   });
   window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?' + params.toString();
@@ -356,13 +315,7 @@ document.getElementById('ams-questions').addEventListener('click', e => {
 });
 function calcAMS() {
   amsTotal = amsAnswers.reduce((s,v)=>s+v,0);
-  document.getElementById('ams-score').textContent = amsTotal;
-  const j = document.getElementById('ams-judge');
-  if(amsTotal<=26){j.textContent='なし';j.className='result-judge judge-none';}
-  else if(amsTotal<=36){j.textContent='軽度';j.className='result-judge judge-mild';}
-  else if(amsTotal<=49){j.textContent='中等度';j.className='result-judge judge-moderate';}
-  else{j.textContent='重度';j.className='result-judge judge-severe';}
-  showScreen('screen-ams-result');
+  startADAM();
 }
 
 // ADAM
@@ -380,10 +333,7 @@ document.getElementById('adam-questions').addEventListener('click', e => {
 });
 function calcADAM() {
   adamPositive = adamAnswers[0]||adamAnswers[6]||adamAnswers.filter((v,i)=>i!==0&&i!==6&&v===true).length>=3;
-  const j = document.getElementById('adam-judge');
-  if(adamPositive){j.textContent='陽性（テストステロン低下の疑いあり）';j.className='result-judge judge-positive';}
-  else{j.textContent='陰性（疑いなし）';j.className='result-judge judge-negative';}
-  showScreen('screen-adam-result');
+  startQPAD();
 }
 
 // q-PAD
@@ -401,11 +351,7 @@ document.getElementById('qpad-questions').addEventListener('click', e => {
 });
 function calcQPAD() {
   qpadTotal = qpadAnswers.reduce((s,v)=>s+v,0);
-  document.getElementById('qpad-score').textContent = qpadTotal;
-  const j = document.getElementById('qpad-judge');
-  if(qpadTotal<15){j.textContent='基準値以下';j.className='result-judge judge-none';}
-  else{j.textContent='LOH症候群の疑いあり';j.className='result-judge judge-severe';}
-  showScreen('screen-qpad-result');
+  showOverall();
 }
 
 // 総合判定
@@ -430,21 +376,21 @@ async function showOverall() {
   const grade = calcGrade();
   const amsJudge = amsTotal<=26?'なし':amsTotal<=36?'軽度':amsTotal<=49?'中等度':'重度';
   const qpadJudge = qpadTotal<15?'基準値以下':'LOH症候群の疑いあり';
+
   await fetch('/api/save-score', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      ams_score: amsTotal,
-      ams_judge: amsJudge,
+      ams_score: amsTotal, ams_judge: amsJudge,
       adam_positive: adamPositive,
-      qpad_score: qpadTotal,
-      qpad_judge: qpadJudge,
+      qpad_score: qpadTotal, qpad_judge: qpadJudge,
       overall_grade: grade,
       ams_answers: amsAnswers,
       adam_answers: adamAnswers,
       qpad_answers: qpadAnswers
     })
   });
+
   setTimeout(()=>{
     document.getElementById('r-ams-score').textContent=amsTotal;
     const rj=document.getElementById('r-ams-judge');
@@ -465,9 +411,6 @@ async function showOverall() {
 document.getElementById('start-btn').addEventListener('click', startAMS);
 document.getElementById('line-login-btn').addEventListener('click', lineLogin);
 document.getElementById('skip-btn').addEventListener('click', startAMS);
-document.getElementById('ams-next-btn').addEventListener('click', startADAM);
-document.getElementById('adam-next-btn').addEventListener('click', startQPAD);
-document.getElementById('qpad-next-btn').addEventListener('click', showOverall);
 document.getElementById('retry-btn').addEventListener('click', ()=>location.reload());
 </script>
 </body>
