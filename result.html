@@ -126,11 +126,9 @@ async function load() {
   const { score, details } = await res.json();
 
   // 日時
-  const date = new Date(score.created_at);
+  const date = new Date(new Date(score.created_at).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }));
   const dateStr = date.getFullYear() + '年' + (date.getMonth()+1) + '月' + date.getDate() + '日 '
     + date.getHours() + ':' + String(date.getMinutes()).padStart(2,'0');
-  document.getElementById('meta-date').textContent = '日時：' + dateStr;
-  document.getElementById('meta-name').textContent = '名前：' + (score.line_name || '匿名');
 
   // 総合判定
   const grade = score.overall_grade;
