@@ -24,7 +24,7 @@ module.exports = async function handler(req, res) {
       if (key === 'line_name') lineName = decodeURIComponent(val)
     })
 
-    // scoresテーブルに保存
+    // scoresテーブルに保存してIDを取得
     const { data: scoreData, error: scoreError } = await supabase
       .from('scores')
       .insert({
@@ -42,7 +42,7 @@ module.exports = async function handler(req, res) {
 
     // 設問ごとの回答を保存
     const amsLabels = ['なし','軽い','中等度','重い','きわめて重い']
-    const amsQuestions = [
+    const amsQList = [
       '総合的な調子の悪さ（健康状態の低下）',
       '関節や筋肉の痛み',
       'ひどい発汗',
@@ -61,8 +61,7 @@ module.exports = async function handler(req, res) {
       '早朝勃起（朝立ち）の回数の減少',
       '性欲の低下'
     ]
-
-    const adamQuestions = [
+    const adamQList = [
       '性欲の低下がありますか？',
       '元気がなくなってきましたか？',
       '体力や持続力の低下がありますか？',
@@ -74,8 +73,7 @@ module.exports = async function handler(req, res) {
       '夕食後に居眠りをすることがありますか？',
       '最近、仕事の能力が低下したと感じますか？'
     ]
-
-    const qpadQuestions = [
+    const qpadQList = [
       '不安感（理由のない不安）',
       '抑うつ（気分が沈み、やる気が出ない）',
       '興味の喪失',
@@ -94,7 +92,6 @@ module.exports = async function handler(req, res) {
 
     const details = []
 
-    // AMS
     if (ams_answers) {
       ams_answers.forEach((val, i) => {
         details.push({
@@ -103,14 +100,13 @@ module.exports = async function handler(req, res) {
           line_name: lineName,
           test_type: 'AMS',
           question_no: i + 1,
-          question_text: amsQuestions[i],
+          question_text: amsQList[i],
           answer_value: val,
           answer_label: amsLabels[val - 1]
         })
       })
     }
 
-    // ADAM
     if (adam_answers) {
       adam_answers.forEach((val, i) => {
         details.push({
@@ -119,14 +115,13 @@ module.exports = async function handler(req, res) {
           line_name: lineName,
           test_type: 'ADAM',
           question_no: i + 1,
-          question_text: adamQuestions[i],
+          question_text: adamQList[i],
           answer_value: val ? 1 : 0,
           answer_label: val ? 'はい' : 'いいえ'
         })
       })
     }
 
-    // q-PAD
     if (qpad_answers) {
       qpad_answers.forEach((val, i) => {
         details.push({
@@ -135,7 +130,7 @@ module.exports = async function handler(req, res) {
           line_name: lineName,
           test_type: 'qPAD',
           question_no: i + 1,
-          question_text: qpadQuestions[i],
+          question_text: qpadQList[i],
           answer_value: val,
           answer_label: qpadLabels[val]
         })
@@ -144,7 +139,8 @@ module.exports = async function handler(req, res) {
 
     await supabase.from('score_details').insert(details)
 
-    res.status(200).json({ ok: true })
+    // IDを返す
+    res.status(200).json({ ok: true, id: scoreId })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: err.message })
