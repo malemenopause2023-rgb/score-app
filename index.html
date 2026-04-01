@@ -43,10 +43,16 @@
     .judge-negative { background: #0d2e1a; color: #2ecc71; border: 1px solid #2ecc71; }
     .divider { border: none; border-top: 1px solid #2a3a50; margin: 20px 0; }
     .overall-grade { text-align: center; font-size: 7rem; font-weight: 900; line-height: 1; margin: 16px 0; }
-    .grade-A { color: #2ecc71; } .grade-B { color: #27ae60; } .grade-C { color: #f39c12; } .grade-D { color: #e67e22; } .grade-E { color: #e74c3c; }
+    .grade-A{color:#2ecc71;} .grade-B{color:#27ae60;} .grade-C{color:#f39c12;} .grade-D{color:#e67e22;} .grade-E{color:#e74c3c;}
     .overall-label { text-align: center; font-size: 0.95rem; font-weight: 700; color: #7a8fa6; margin-bottom: 16px; letter-spacing: 0.05em; }
     .comment-box { background: #0f1923; border: 1px solid #2a3a50; border-radius: 10px; padding: 16px; font-size: 0.88rem; color: #8fa8c0; line-height: 1.9; white-space: pre-wrap; }
-    .retry-btn { width: 100%; margin-top: 16px; padding: 14px; background: transparent; color: #2e86de; border: 1px solid #1e5fa8; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; letter-spacing: 0.05em; transition: all 0.18s; }
+    .share-box { background: #0f1923; border: 1px solid #1e5fa8; border-radius: 10px; padding: 16px; margin-top: 16px; }
+    .share-box-title { font-size: 0.82rem; font-weight: 700; color: #2e86de; margin-bottom: 6px; }
+    .share-box-desc { font-size: 0.78rem; color: #5a8fc0; margin-bottom: 10px; line-height: 1.6; }
+    .copy-btn { width: 100%; padding: 14px; background: linear-gradient(135deg,#1e5fa8,#2e86de); color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.18s; }
+    .copy-btn:hover { opacity: 0.9; }
+    .copy-msg { font-size: 0.78rem; color: #2ecc71; text-align: center; margin-top: 8px; display: none; }
+    .retry-btn { width: 100%; margin-top: 12px; padding: 14px; background: transparent; color: #2e86de; border: 1px solid #1e5fa8; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; letter-spacing: 0.05em; transition: all 0.18s; }
     .retry-btn:hover { background: #1e2e42; }
     .note { font-size: 0.75rem; color: #3a4f65; text-align: center; margin-top: 16px; line-height: 1.6; }
     .loading-icon { font-size: 3rem; animation: spin 1.2s linear infinite; display: block; margin-bottom: 12px; text-align: center; }
@@ -154,19 +160,16 @@
     <div class="overall-grade" id="overall-grade">-</div>
     <div class="overall-label" id="overall-label">-</div>
     <div class="comment-box" id="overall-comment">-</div>
-    <p class="note">※医療診断ではありません。気になる方は専門医にご相談ください。</p>
 
-     <div style="background:#0f1923;border:1px solid #2a3a50;border-radius:10px;padding:16px;margin-bottom:12px;">
-      <div style="font-size:0.82rem;font-weight:700;color:#2e86de;margin-bottom:8px;">📧 専門医に結果を送る</div>
-      <div style="font-size:0.78rem;color:#5a8fc0;margin-bottom:10px;">このチェック詳細を専門医（泌尿器科・メンズヘルス外来）に送ることができます</div>
-      <input type="email" id="doctor-email" placeholder="送り先のメールアドレス"
-        style="width:100%;padding:12px;background:#1a2535;border:1px solid #2a3a50;border-radius:8px;color:#e8edf2;font-family:'Noto Sans JP',sans-serif;font-size:0.88rem;margin-bottom:10px;outline:none;">
-      <button id="send-email-btn"
-        style="width:100%;padding:14px;background:linear-gradient(135deg,#1e5fa8,#2e86de);color:white;border:none;border-radius:8px;font-family:'Noto Sans JP',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;">
-        メールアプリで送信する 📨
-      </button>
+    <!-- 結果共有ボックス -->
+    <div class="share-box">
+      <div class="share-box-title">🔗 結果を専門医に共有する</div>
+      <div class="share-box-desc">このURLを医師やご家族に送ることで、設問ごとの詳細な結果を共有できます。</div>
+      <button class="copy-btn" id="copy-url-btn">結果URLをコピーする 🔗</button>
+      <div class="copy-msg" id="copy-msg">✅ コピーしました！LINEやメールで貼り付けて送ってください。</div>
     </div>
-    
+
+    <p class="note">※医療診断ではありません。気になる方は専門医にご相談ください。</p>
     <button class="retry-btn" id="retry-btn">もう一度チェックする</button>
   </div>
 </div>
@@ -230,6 +233,7 @@ let adamAnswers = new Array(10).fill(null);
 let qpadAnswers = new Array(13).fill(null);
 let amsVisible = CHUNK, adamVisible = CHUNK, qpadVisible = CHUNK;
 let amsTotal = 0, adamPositive = false, qpadTotal = 0;
+let savedScoreId = null;
 
 function getLineUid() {
   return document.cookie.split(';').map(c=>c.trim()).find(c=>c.startsWith('line_uid='))?.split('=')[1] || null;
@@ -389,7 +393,7 @@ async function showOverall() {
   const amsJudge = amsTotal<=26?'なし':amsTotal<=36?'軽度':amsTotal<=49?'中等度':'重度';
   const qpadJudge = qpadTotal<15?'基準値以下':'LOH症候群の疑いあり';
 
-  await fetch('/api/save-score', {
+  const saveRes = await fetch('/api/save-score', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -402,6 +406,8 @@ async function showOverall() {
       qpad_answers: qpadAnswers
     })
   });
+  const saveData = await saveRes.json();
+  if (saveData.id) savedScoreId = saveData.id;
 
   setTimeout(()=>{
     document.getElementById('r-ams-score').textContent=amsTotal;
@@ -424,46 +430,15 @@ document.getElementById('start-btn').addEventListener('click', startAMS);
 document.getElementById('line-login-btn').addEventListener('click', lineLogin);
 document.getElementById('skip-btn').addEventListener('click', startAMS);
 document.getElementById('retry-btn').addEventListener('click', ()=>location.reload());
-  
-document.getElementById('send-email-btn').addEventListener('click', () => {
-  const email = document.getElementById('doctor-email').value;
-  if (!email) { alert('送り先のメールアドレスを入力してください'); return; }
 
-  const amsJudge = amsTotal<=26?'なし':amsTotal<=36?'軽度':amsTotal<=49?'中等度':'重度';
-  const qpadJudge = qpadTotal<15?'基準値以下':'LOH症候群の疑いあり';
-  const grade = calcGrade();
-
-  const amsLabels = ['なし','軽い','中等度','重い','きわめて重い'];
-  const qpadLabels = ['なし','たまにある','よくある','ひどい'];
-
-  let body = '■ 男性ホルモン セルフチェック結果\n\n';
-
-  body += '【AMSスコア】' + amsTotal + '点（' + amsJudge + '）\n';
-  amsQuestions.forEach((q, i) => {
-    body += '  Q' + (i+1) + '. ' + q + '\n';
-    body += '     → ' + amsLabels[amsAnswers[i]-1] + '\n';
+document.getElementById('copy-url-btn').addEventListener('click', () => {
+  if (!savedScoreId) { alert('結果の保存が完了していません。'); return; }
+  const url = window.location.origin + '/result?id=' + savedScoreId;
+  navigator.clipboard.writeText(url).then(() => {
+    document.getElementById('copy-msg').style.display = 'block';
+    setTimeout(() => document.getElementById('copy-msg').style.display = 'none', 3000);
   });
-
-  body += '\n【ADAMスコア】' + (adamPositive ? '陽性' : '陰性') + '\n';
-  adamQuestions.forEach((q, i) => {
-    body += '  Q' + (i+1) + '. ' + q + '\n';
-    body += '     → ' + (adamAnswers[i] ? 'はい' : 'いいえ') + '\n';
-  });
-
-  body += '\n【q-PADスコア】' + qpadTotal + '点（' + qpadJudge + '）\n';
-  qpadQuestions.forEach((q, i) => {
-    body += '  Q' + (i+1) + '. ' + q + '\n';
-    body += '     → ' + qpadLabels[qpadAnswers[i]] + '\n';
-  });
-
-  body += '\n【総合判定】グレード ' + grade + '（' + gradeLabels[grade] + '）\n';
-  body += gradeComments[grade];
-
-  const subject = encodeURIComponent('男性ホルモン セルフチェック結果');
-  const bodyEncoded = encodeURIComponent(body);
-  window.location.href = 'mailto:' + email + '?subject=' + subject + '&body=' + bodyEncoded;
 });
-  
 </script>
 </body>
 </html>
