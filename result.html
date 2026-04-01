@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>チェック結果</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Noto Sans JP', sans-serif; background: #0f1923; min-height: 100vh; padding: 16px; display: flex; align-items: flex-start; justify-content: center; }
+    .container { max-width: 480px; width: 100%; padding-top: 16px; padding-bottom: 40px; }
+    .card { background: #1a2535; border-radius: 16px; padding: 24px 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.4); border: 1px solid #2a3a50; margin-bottom: 16px; }
+    .badge { display: inline-block; background: linear-gradient(135deg,#1e5fa8,#2e86de); color: white; font-size: 0.72rem; font-weight: 700; padding: 4px 14px; border-radius: 4px; margin-bottom: 12px; }
+    h1 { font-size: 1.3rem; font-weight: 900; color: #e8edf2; margin-bottom: 6px; }
+    .meta { font-size: 0.82rem; color: #5a8fc0; margin-bottom: 4px; }
+    .grade-box { text-align: center; padding: 20px 0; }
+    .grade-label { font-size: 0.82rem; color: #5a8fc0; margin-bottom: 8px; letter-spacing: 0.05em; }
+    .grade-value { font-size: 5rem; font-weight: 900; }
+    .grade-A{color:#2ecc71;} .grade-B{color:#27ae60;} .grade-C{color:#f39c12;} .grade-D{color:#e67e22;} .grade-E{color:#e74c3c;}
+    .grade-name { font-size: 0.95rem; font-weight: 700; color: #7a8fa6; margin-top: 4px; }
+    .score-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #2a3a50; }
+    .score-row:last-child { border-bottom: none; }
+    .score-label { font-size: 0.82rem; color: #5a8fc0; font-weight: 700; }
+    .score-value { font-size: 0.95rem; font-weight: 700; color: #e8edf2; }
+    .judge { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 0.78rem; font-weight: 700; }
+    .judge-none { background: #0d2e1a; color: #2ecc71; border: 1px solid #2ecc71; }
+    .judge-mild { background: #2e1f00; color: #f39c12; border: 1px solid #f39c12; }
+    .judge-moderate { background: #2e1500; color: #e67e22; border: 1px solid #e67e22; }
+    .judge-severe { background: #2e0000; color: #e74c3c; border: 1px solid #e74c3c; }
+    .judge-positive { background: #2e0000; color: #e74c3c; border: 1px solid #e74c3c; }
+    .judge-negative { background: #0d2e1a; color: #2ecc71; border: 1px solid #2ecc71; }
+    .section-title { font-size: 0.85rem; font-weight: 700; color: #2e86de; margin-bottom: 12px; letter-spacing: 0.05em; text-transform: uppercase; padding-bottom: 8px; border-bottom: 1px solid #2a3a50; }
+    .q-row { padding: 10px 0; border-bottom: 1px solid #1a2535; }
+    .q-row:last-child { border-bottom: none; }
+    .q-num { font-size: 0.7rem; color: #2e86de; font-weight: 700; margin-bottom: 3px; }
+    .q-text { font-size: 0.85rem; color: #8fa8c0; line-height: 1.5; margin-bottom: 4px; }
+    .q-answer { font-size: 0.88rem; font-weight: 700; color: #e8edf2; }
+    .comment-box { background: #0f1923; border: 1px solid #2a3a50; border-radius: 10px; padding: 14px; font-size: 0.85rem; color: #8fa8c0; line-height: 1.9; white-space: pre-wrap; }
+    .loading { text-align: center; padding: 60px 20px; color: #5a8fc0; font-weight: 700; }
+    .error { text-align: center; padding: 60px 20px; color: #e74c3c; font-weight: 700; }
+    .note { font-size: 0.75rem; color: #3a4f65; text-align: center; margin-top: 8px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div id="loading" class="card">
+    <div class="loading">⚙️ 読み込み中...</div>
+  </div>
+  <div id="content" style="display:none">
+
+    <!-- ヘッダー -->
+    <div class="card">
+      <div class="badge">MENS HEALTH CHECK — RESULT</div>
+      <h1>男性ホルモン セルフチェック結果</h1>
+      <div class="meta" id="meta-date">日時：-</div>
+      <div class="meta" id="meta-name">名前：-</div>
+    </div>
+
+    <!-- 総合判定 -->
+    <div class="card">
+      <div class="section-title">OVERALL GRADE</div>
+      <div class="grade-box">
+        <div class="grade-label">総合グレード</div>
+        <div class="grade-value" id="grade-value">-</div>
+        <div class="grade-name" id="grade-name">-</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">AMSスコア</div>
+        <div class="score-value"><span id="ams-score">-</span>点 <span id="ams-judge" class="judge">-</span></div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">ADAMスコア</div>
+        <div class="score-value"><span id="adam-judge" class="judge">-</span></div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">q-PADスコア</div>
+        <div class="score-value"><span id="qpad-score">-</span>点 <span id="qpad-judge" class="judge">-</span></div>
+      </div>
+      <div style="margin-top:16px;">
+        <div class="comment-box" id="comment-box">-</div>
+      </div>
+      <p class="note">※医療診断ではありません。気になる方は専門医にご相談ください。</p>
+    </div>
+
+    <!-- AMS詳細 -->
+    <div class="card">
+      <div class="section-title">AMS SCORE — 設問詳細</div>
+      <div id="ams-details"></div>
+    </div>
+
+    <!-- ADAM詳細 -->
+    <div class="card">
+      <div class="section-title">ADAM SCORE — 設問詳細</div>
+      <div id="adam-details"></div>
+    </div>
+
+    <!-- q-PAD詳細 -->
+    <div class="card">
+      <div class="section-title">q-PAD SCORE — 設問詳細</div>
+      <div id="qpad-details"></div>
+    </div>
+
+  </div>
+  <div id="error" class="card" style="display:none">
+    <div class="error">❌ 結果が見つかりませんでした。</div>
+  </div>
+</div>
+
+<script>
+const gradeLabels = {A:'非常に良好',B:'概ね良好',C:'やや注意が必要',D:'注意が必要',E:'早めに専門医へ相談を'};
+const gradeComments = {
+  A:'3つのスコアがいずれも基準値内です。\n現在の生活習慣を続けながら、定期的にセルフチェックを行いましょう。',
+  B:'いくつかの項目で軽度の変化が見られます。\n睡眠・運動・食事のバランスを意識することで改善が期待できます。',
+  C:'複数のスコアで注意すべき値が出ています。\n生活習慣の見直しを検討してください。専門医への相談も選択肢です。',
+  D:'複数のスコアで顕著な変化が見られます。\n専門医（泌尿器科・メンズヘルス外来）への相談をお勧めします。',
+  E:'3つのスコアが全体的に高い値を示しています。\nできるだけ早めに泌尿器科やメンズヘルス専門外来を受診されることをお勧めします。'
+};
+
+async function load() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  if (!id) { showError(); return; }
+
+  const res = await fetch('/api/result?id=' + id);
+  if (!res.ok) { showError(); return; }
+  const { score, details } = await res.json();
+
+  // 日時
+  const date = new Date(score.created_at);
+  const dateStr = date.getFullYear() + '年' + (date.getMonth()+1) + '月' + date.getDate() + '日 '
+    + date.getHours() + ':' + String(date.getMinutes()).padStart(2,'0');
+  document.getElementById('meta-date').textContent = '日時：' + dateStr;
+  document.getElementById('meta-name').textContent = '名前：' + (score.line_name || '匿名');
+
+  // 総合判定
+  const grade = score.overall_grade;
+  const gradeEl = document.getElementById('grade-value');
+  gradeEl.textContent = grade;
+  gradeEl.className = 'grade-value grade-' + grade;
+  document.getElementById('grade-name').textContent = gradeLabels[grade] || '-';
+  document.getElementById('comment-box').textContent = gradeComments[grade] || '-';
+
+  // AMS
+  document.getElementById('ams-score').textContent = score.ams_score;
+  const amsJ = document.getElementById('ams-judge');
+  amsJ.textContent = score.ams_judge;
+  amsJ.className = 'judge ' + judgeClass(score.ams_judge);
+
+  // ADAM
+  const adamJ = document.getElementById('adam-judge');
+  adamJ.textContent = score.adam_positive ? '陽性' : '陰性';
+  adamJ.className = 'judge ' + (score.adam_positive ? 'judge-positive' : 'judge-negative');
+
+  // q-PAD
+  document.getElementById('qpad-score').textContent = score.qpad_score;
+  const qpadJ = document.getElementById('qpad-judge');
+  qpadJ.textContent = score.qpad_judge;
+  qpadJ.className = 'judge ' + judgeClass(score.qpad_judge);
+
+  // 設問詳細
+  renderDetails('ams-details', details.filter(d => d.test_type === 'AMS'));
+  renderDetails('adam-details', details.filter(d => d.test_type === 'ADAM'));
+  renderDetails('qpad-details', details.filter(d => d.test_type === 'qPAD'));
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('content').style.display = 'block';
+}
+
+function renderDetails(elId, items) {
+  const el = document.getElementById(elId);
+  el.innerHTML = items.map(d =>
+    '<div class="q-row">'
+    + '<div class="q-num">Q' + d.question_no + '</div>'
+    + '<div class="q-text">' + d.question_text + '</div>'
+    + '<div class="q-answer">→ ' + d.answer_label + '</div>'
+    + '</div>'
+  ).join('');
+}
+
+function judgeClass(judge) {
+  if (!judge) return '';
+  if (judge === 'なし' || judge === '基準値以下') return 'judge-none';
+  if (judge === '軽度') return 'judge-mild';
+  if (judge === '中等度') return 'judge-moderate';
+  if (judge === '重度' || judge === 'LOH症候群の疑いあり') return 'judge-severe';
+  return '';
+}
+
+function showError() {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('error').style.display = 'block';
+}
+
+load();
+</script>
+</body>
+</html>
