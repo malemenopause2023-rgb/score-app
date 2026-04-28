@@ -21,7 +21,7 @@
     .question-block.answered { border-color: #1e5fa8; background: #121d2e; }
     .q-num { font-size: 0.72rem; color: #2e86de; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.08em; text-transform: uppercase; }
     .q-text { font-size: 0.95rem; font-weight: 700; color: #c8d6e5; line-height: 1.6; margin-bottom: 14px; }
-    .options-5, .options-4 { display: flex; flex-direction: column; gap: 7px; }
+    .options-5 { display: flex; flex-direction: column; gap: 7px; }
     .options-yn { display: flex; gap: 10px; }
     .opt-btn { background: #1a2535; border: 1px solid #2a3a50; border-radius: 8px; padding: 11px 14px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; font-weight: 400; color: #8fa8c0; cursor: pointer; transition: all 0.18s; text-align: left; width: 100%; }
     .opt-btn:hover { background: #1e2e42; border-color: #1e5fa8; color: #c8d6e5; }
@@ -29,8 +29,8 @@
     .opt-yn { flex: 1; text-align: center; padding: 14px; border-radius: 8px; border: 1px solid #2a3a50; background: #1a2535; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; color: #8fa8c0; cursor: pointer; transition: all 0.18s; }
     .opt-yn:hover { background: #1e2e42; border-color: #1e5fa8; color: #c8d6e5; }
     .opt-yn.selected { background: linear-gradient(135deg,#1e5fa8,#2e86de); border-color: #2e86de; color: white; }
-    .next-btn, .start-btn { width: 100%; padding: 16px; background: linear-gradient(135deg,#1e5fa8,#2e86de); color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 20px; letter-spacing: 0.05em; transition: all 0.18s; }
-    .next-btn:hover, .start-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .start-btn { width: 100%; padding: 16px; background: linear-gradient(135deg,#1e5fa8,#2e86de); color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 20px; letter-spacing: 0.05em; transition: all 0.18s; }
+    .start-btn:hover { opacity: 0.9; transform: translateY(-1px); }
     .result-section { margin-bottom: 20px; }
     .result-title { font-size: 0.85rem; font-weight: 700; color: #5a8fc0; margin-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase; }
     .result-score { font-size: 2.2rem; font-weight: 900; color: #e8edf2; }
@@ -70,18 +70,15 @@
   <div id="screen-top" class="card">
     <div class="step-badge">MENS HEALTH CHECK「QAA」</div>
     <h1>QAA（クアー）</h1>
-    <p class="desc">AMS・ADAM・q-PADの3種類の国際的な指標で、男性ホルモンの状態を総合的にチェックします。2問ずつ表示されます。<br>※スコアには相互重複している質問があります。<br><span style="color:red;font-weight:bold;">ご自身が感じる感覚でご回答ください</span></p>
+    <p class="desc">AMS・ADAMの2種類の国際的な指標で、男性ホルモンの状態を総合的にチェックします。2問ずつ表示されます。<br>※スコアには相互重複している質問があります。<br><span style="color:red;font-weight:bold;">ご自身が感じる感覚でご回答ください</span></p>
     <div class="info-box">
       <div class="info-box-title">📋 チェックの流れ</div>
       <div class="info-box-body">
         STEP 1｜AMSスコア（17問）<br>
         STEP 2｜ADAMスコア（10問）<br>
-        STEP 3｜q-PADスコア（13問）<br>
         RESULT｜総合判定（A〜E）
       </div>
     </div>
-
-    <!-- 年代選択 -->
     <div style="margin-bottom:16px;">
       <div style="font-size:0.82rem;font-weight:700;color:#2e86de;margin-bottom:8px;">📋 年代を選択してください</div>
       <select id="age-group" class="age-select">
@@ -106,14 +103,13 @@
         <option value="70代後半">70代後半（78〜79歳）</option>
       </select>
     </div>
-
     <button class="start-btn" id="start-btn">チェックを開始する →</button>
     <p class="note">※このチェックは医療診断ではありません。</p>
   </div>
 
   <!-- AMS -->
   <div id="screen-ams" class="card" style="display:none">
-    <div class="step-badge">STEP 1 / 3 — AMS SCORE</div>
+    <div class="step-badge">STEP 1 / 2 — AMS SCORE</div>
     <h1>AMSスコア</h1>
     <p class="desc">各症状の程度を5段階で選択してください。</p>
     <div class="progress-wrap">
@@ -125,7 +121,7 @@
 
   <!-- ADAM -->
   <div id="screen-adam" class="card" style="display:none">
-    <div class="step-badge">STEP 2 / 3 — ADAM SCORE</div>
+    <div class="step-badge">STEP 2 / 2 — ADAM SCORE</div>
     <h1>ADAMスコア</h1>
     <p class="desc">各質問に「はい」「いいえ」でお答えください。</p>
     <div class="progress-wrap">
@@ -133,18 +129,6 @@
       <div class="progress-bar"><div class="progress-fill" id="adam-progress-fill" style="width:0%"></div></div>
     </div>
     <div id="adam-questions"></div>
-  </div>
-
-  <!-- q-PAD -->
-  <div id="screen-qpad" class="card" style="display:none">
-    <div class="step-badge">STEP 3 / 3 — q-PAD SCORE</div>
-    <h1>q-PADスコア</h1>
-    <p class="desc">各症状の程度を4段階で選択してください。</p>
-    <div class="progress-wrap">
-      <div class="progress-label" id="qpad-progress-label">ANSWERED 0 / 13</div>
-      <div class="progress-bar"><div class="progress-fill" id="qpad-progress-fill" style="width:0%"></div></div>
-    </div>
-    <div id="qpad-questions"></div>
   </div>
 
   <!-- LOADING -->
@@ -168,24 +152,16 @@
       <div id="r-adam-judge" class="result-judge" style="font-size:0.9rem;margin-top:4px;">-</div>
     </div>
     <hr class="divider">
-    <div class="result-section">
-      <div class="result-title">q-PAD SCORE</div>
-      <div class="result-score" style="font-size:1.6rem"><span id="r-qpad-score">0</span> <span style="font-size:0.9rem;color:#5a8fc0;">点</span></div>
-      <div id="r-qpad-judge" class="result-judge">-</div>
-    </div>
-    <hr class="divider">
     <div class="result-title" style="text-align:center;">OVERALL GRADE</div>
     <div class="overall-grade" id="overall-grade">-</div>
     <div class="overall-label" id="overall-label">-</div>
     <div class="comment-box" id="overall-comment">-</div>
-
     <div class="share-box">
       <div class="share-box-title">🔗 結果を専門医に共有する</div>
       <div class="share-box-desc">このURLを医師やご家族に送ることで、設問ごとの詳細な結果を共有できます。</div>
       <button class="copy-btn" id="copy-url-btn">結果URLをコピーする 🔗</button>
       <div class="copy-msg" id="copy-msg">✅ コピーしました！LINEやメールで貼り付けて送ってください。</div>
     </div>
-
     <p class="note">※医療診断ではありません。気になる方は専門医にご相談ください。</p>
     <button class="retry-btn" id="retry-btn">もう一度チェックする</button>
   </div>
@@ -228,28 +204,10 @@ const adamQuestions = [
   "最近、仕事の能力が低下したと感じますか？"
 ];
 
-const qpadQuestions = [
-  "不安感（理由のない不安）",
-  "抑うつ（気分が沈み、やる気が出ない）",
-  "興味の喪失（以前楽しめたことが楽しめない）",
-  "集中力の低下",
-  "易疲労感（疲れやすさ）",
-  "睡眠障害",
-  "発汗・のぼせ",
-  "肥満（特にお腹周り）",
-  "筋力低下",
-  "性欲の減退",
-  "朝立ちの回数の減少",
-  "勃起力の低下",
-  "射精感の低下"
-];
-const qpadOptions = ["なし","たまにある","よくある","ひどい"];
-
 let amsAnswers = new Array(17).fill(null);
 let adamAnswers = new Array(10).fill(null);
-let qpadAnswers = new Array(13).fill(null);
-let amsVisible = CHUNK, adamVisible = CHUNK, qpadVisible = CHUNK;
-let amsTotal = 0, adamPositive = false, qpadTotal = 0;
+let amsVisible = CHUNK, adamVisible = CHUNK;
+let amsTotal = 0, adamPositive = false;
 let savedScoreId = null;
 
 function showScreen(id) {
@@ -268,13 +226,9 @@ function renderQuestion(containerId, i, questions, answers, type, options) {
       + '<button class="opt-yn'+(answers[i]===true?' selected':'')+'" data-qi="'+i+'" data-val="true">はい</button>'
       + '<button class="opt-yn'+(answers[i]===false?' selected':'')+'" data-qi="'+i+'" data-val="false">いいえ</button>'
       + '</div>';
-  } else if (type === '5') {
+  } else {
     optHTML = '<div class="options-5">'+options.map((o,j)=>
       '<button class="opt-btn'+(answers[i]===j+1?' selected':'')+'" data-qi="'+i+'" data-val="'+(j+1)+'">'+o+'</button>'
-    ).join('')+'</div>';
-  } else {
-    optHTML = '<div class="options-4">'+options.map((o,j)=>
-      '<button class="opt-btn'+(answers[i]===j?' selected':'')+'" data-qi="'+i+'" data-val="'+j+'">'+o+'</button>'
     ).join('')+'</div>';
   }
   block.innerHTML = '<div class="q-num">Q'+(i+1)+'</div><div class="q-text">'+questions[i]+'</div>'+optHTML;
@@ -342,49 +296,29 @@ document.getElementById('adam-questions').addEventListener('click', e => {
 });
 function calcADAM() {
   adamPositive = adamAnswers[0]||adamAnswers[6]||adamAnswers.filter((v,i)=>i!==0&&i!==6&&v===true).length>=3;
-  startQPAD();
-}
-
-// q-PAD
-function startQPAD() {
-  qpadVisible = CHUNK; showScreen('screen-qpad');
-  renderChunk('qpad-questions', qpadQuestions, qpadAnswers, qpadVisible, '4', qpadOptions);
-}
-document.getElementById('qpad-questions').addEventListener('click', e => {
-  const btn = e.target.closest('[data-qi]'); if (!btn) return;
-  const qi = parseInt(btn.dataset.qi), val = parseInt(btn.dataset.val);
-  qpadAnswers[qi] = val;
-  btn.closest('.options-4').querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected'); btn.closest('.question-block').classList.add('answered');
-  tryAdvance('qpad-questions',qpadAnswers,qpadQuestions,()=>qpadVisible,v=>{qpadVisible=v;},'4',qpadOptions,'qpad-progress-label','qpad-progress-fill',calcQPAD);
-});
-function calcQPAD() {
-  qpadTotal = qpadAnswers.reduce((s,v)=>s+v,0);
   showOverall();
 }
 
-// 総合判定
+// 総合判定（AMS＋ADAMのみ）
 function calcGrade() {
-  let p=0;
+  let p = 0;
   if(amsTotal>49)p+=3; else if(amsTotal>36)p+=2; else if(amsTotal>26)p+=1;
   if(adamPositive)p+=2;
-  if(qpadTotal>=32)p+=3; else if(qpadTotal>=25)p+=2; else if(qpadTotal>=15)p+=1;
-  if(p===0)return'A'; if(p<=2)return'B'; if(p<=4)return'C'; if(p<=6)return'D'; return'E';
+  if(p===0)return'A'; if(p<=1)return'B'; if(p<=2)return'C'; if(p<=3)return'D'; return'E';
 }
 const gradeLabels={A:'非常に良好',B:'概ね良好',C:'やや注意が必要',D:'注意が必要',E:'早めに専門医へ相談を'};
 const gradeComments={
-  A:'3つのスコアがいずれも基準値内です。\n現在の生活習慣を続けながら、定期的にセルフチェックを行いましょう。',
+  A:'AMSスコア・ADAMスコアともに基準値内です。\n現在の生活習慣を続けながら、定期的にセルフチェックを行いましょう。',
   B:'いくつかの項目で軽度の変化が見られます。\n睡眠・運動・食事のバランスを意識することで改善が期待できます。',
   C:'複数のスコアで注意すべき値が出ています。\n生活習慣の見直しを検討してください。専門医への相談も選択肢です。',
   D:'複数のスコアで顕著な変化が見られます。\n専門医（泌尿器科・メンズヘルス外来）への相談をお勧めします。',
-  E:'3つのスコアが全体的に高い値を示しています。\nできるだけ早めに泌尿器科やメンズヘルス専門外来を受診されることをお勧めします。'
+  E:'スコアが全体的に高い値を示しています。\nできるだけ早めに泌尿器科やメンズヘルス専門外来を受診されることをお勧めします。'
 };
 
 async function showOverall() {
   showScreen('screen-loading');
   const grade = calcGrade();
   const amsJudge = amsTotal<=26?'なし':amsTotal<=36?'軽度':amsTotal<=49?'中等度':'重度';
-  const qpadJudge = qpadTotal<15?'基準値以下':'LOH症候群の疑いあり';
   const ageGroup = document.getElementById('age-group').value;
 
   const saveRes = await fetch('/api/save-score', {
@@ -393,12 +327,10 @@ async function showOverall() {
     body: JSON.stringify({
       ams_score: amsTotal, ams_judge: amsJudge,
       adam_positive: adamPositive,
-      qpad_score: qpadTotal, qpad_judge: qpadJudge,
       overall_grade: grade,
       age_group: ageGroup,
       ams_answers: amsAnswers,
-      adam_answers: adamAnswers,
-      qpad_answers: qpadAnswers
+      adam_answers: adamAnswers
     })
   });
   const saveData = await saveRes.json();
@@ -410,9 +342,6 @@ async function showOverall() {
     rj.textContent=amsJudge;rj.className='result-judge '+(amsTotal<=26?'judge-none':amsTotal<=36?'judge-mild':amsTotal<=49?'judge-moderate':'judge-severe');
     const aj=document.getElementById('r-adam-judge');
     aj.textContent=adamPositive?'陽性':'陰性';aj.className='result-judge '+(adamPositive?'judge-positive':'judge-negative');
-    document.getElementById('r-qpad-score').textContent=qpadTotal;
-    const qj=document.getElementById('r-qpad-judge');
-    qj.textContent=qpadJudge;qj.className='result-judge '+(qpadTotal<15?'judge-none':'judge-severe');
     const ge=document.getElementById('overall-grade');
     ge.textContent=grade;ge.className='overall-grade grade-'+grade;
     document.getElementById('overall-label').textContent=gradeLabels[grade];
@@ -429,7 +358,6 @@ function checkAgeAndStart() {
 
 document.getElementById('start-btn').addEventListener('click', checkAgeAndStart);
 document.getElementById('retry-btn').addEventListener('click', ()=>location.reload());
-
 document.getElementById('copy-url-btn').addEventListener('click', () => {
   if (!savedScoreId) { alert('結果の保存が完了していません。'); return; }
   const url = window.location.origin + '/result?id=' + savedScoreId;
