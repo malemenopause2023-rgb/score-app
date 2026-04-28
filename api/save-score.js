@@ -9,9 +9,9 @@ module.exports = async function handler(req, res) {
   try {
     const {
       ams_score, ams_judge, adam_positive,
-      qpad_score, qpad_judge, overall_grade,
+      jamq_score, jamq_judge, overall_grade,
       age_group,
-      ams_answers, adam_answers, qpad_answers
+      ams_answers, adam_answers, jamq_answers
     } = req.body
 
     const cookieHeader = req.headers.cookie || ''
@@ -29,7 +29,7 @@ module.exports = async function handler(req, res) {
       .from('scores')
       .insert({
         ams_score, ams_judge, adam_positive,
-        qpad_score, qpad_judge, overall_grade,
+        jamq_score, jamq_judge, overall_grade,
         age_group,
         line_uid: lineUid,
         line_name: lineName
@@ -55,13 +55,25 @@ module.exports = async function handler(req, res) {
       '勃起力が弱くなりましたか？','最近、運動能力が低下したと感じますか？',
       '夕食後に居眠りをすることがありますか？','最近、仕事の能力が低下したと感じますか？'
     ]
-    const qpadQList = [
-      '不安感（理由のない不安）','抑うつ（気分が沈み、やる気が出ない）','興味の喪失',
-      '集中力の低下','易疲労感（疲れやすさ）','睡眠障害','発汗・のぼせ',
-      '肥満（特にお腹周り）','筋力低下','性欲の減退','朝立ちの回数の減少',
-      '勃起力の低下','射精感の低下'
+    const jamqQList = [
+      '体調がすぐれず、気難しくなりがち',
+      '不眠に悩んでいる',
+      '不安感・寂しさを感じる',
+      'くよくよしやすく、気分が沈みがち',
+      'ほてり、のぼせ、多汗がある',
+      '動悸、息切れ、息苦しいことがある',
+      'めまい、吐き気がある',
+      '疲れやすい',
+      '頭痛、頭が重い、肩こりがある',
+      '腰痛、手足の関節の痛み',
+      '手足がこわばる',
+      '手足がしびれたり、ピリピリする',
+      '性欲が減退したと感じる',
+      '勃起力が減退したと感じる',
+      'セックスの頻度'
     ]
-    const qpadLabels = ['なし','たまにある','よくある','ひどい']
+    const jamqLabels = ['ほとんどない','ややある','かなりある','特につらい']
+    const jamqQ15Labels = ['2週間に1〜2回以上','月に1〜2回','月1回未満','全くない']
 
     const details = []
 
@@ -87,13 +99,14 @@ module.exports = async function handler(req, res) {
       })
     }
 
-    if (qpad_answers) {
-      qpad_answers.forEach((val, i) => {
+    if (jamq_answers) {
+      jamq_answers.forEach((val, i) => {
         details.push({
           score_id: scoreId, line_uid: lineUid, line_name: lineName,
-          test_type: 'qPAD', question_no: i + 1,
-          question_text: qpadQList[i],
-          answer_value: val, answer_label: qpadLabels[val]
+          test_type: 'JAMQ', question_no: i + 1,
+          question_text: jamqQList[i],
+          answer_value: val,
+          answer_label: i === 14 ? jamqQ15Labels[val - 1] : jamqLabels[val - 1]
         })
       })
     }
