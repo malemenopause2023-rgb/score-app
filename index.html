@@ -21,7 +21,7 @@
     .question-block.answered { border-color: #1e5fa8; background: #121d2e; }
     .q-num { font-size: 0.72rem; color: #2e86de; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.08em; text-transform: uppercase; }
     .q-text { font-size: 0.95rem; font-weight: 700; color: #c8d6e5; line-height: 1.6; margin-bottom: 14px; }
-    .options-5 { display: flex; flex-direction: column; gap: 7px; }
+    .options-5, .options-4 { display: flex; flex-direction: column; gap: 7px; }
     .options-yn { display: flex; gap: 10px; }
     .opt-btn { background: #1a2535; border: 1px solid #2a3a50; border-radius: 8px; padding: 11px 14px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; font-weight: 400; color: #8fa8c0; cursor: pointer; transition: all 0.18s; text-align: left; width: 100%; }
     .opt-btn:hover { background: #1e2e42; border-color: #1e5fa8; color: #c8d6e5; }
@@ -29,8 +29,8 @@
     .opt-yn { flex: 1; text-align: center; padding: 14px; border-radius: 8px; border: 1px solid #2a3a50; background: #1a2535; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; color: #8fa8c0; cursor: pointer; transition: all 0.18s; }
     .opt-yn:hover { background: #1e2e42; border-color: #1e5fa8; color: #c8d6e5; }
     .opt-yn.selected { background: linear-gradient(135deg,#1e5fa8,#2e86de); border-color: #2e86de; color: white; }
-    .start-btn { width: 100%; padding: 16px; background: linear-gradient(135deg,#1e5fa8,#2e86de); color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 20px; letter-spacing: 0.05em; transition: all 0.18s; }
-    .start-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .next-btn, .start-btn { width: 100%; padding: 16px; background: linear-gradient(135deg,#1e5fa8,#2e86de); color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 20px; letter-spacing: 0.05em; transition: all 0.18s; }
+    .next-btn:hover, .start-btn:hover { opacity: 0.9; transform: translateY(-1px); }
     .result-section { margin-bottom: 20px; }
     .result-title { font-size: 0.85rem; font-weight: 700; color: #5a8fc0; margin-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase; }
     .result-score { font-size: 2.2rem; font-weight: 900; color: #e8edf2; }
@@ -46,6 +46,7 @@
     .grade-A{color:#2ecc71;} .grade-B{color:#27ae60;} .grade-C{color:#f39c12;} .grade-D{color:#e67e22;} .grade-E{color:#e74c3c;}
     .overall-label { text-align: center; font-size: 0.95rem; font-weight: 700; color: #7a8fa6; margin-bottom: 16px; letter-spacing: 0.05em; }
     .comment-box { background: #0f1923; border: 1px solid #2a3a50; border-radius: 10px; padding: 16px; font-size: 0.88rem; color: #8fa8c0; line-height: 1.9; white-space: pre-wrap; }
+    .note-box { background: #0f1923; border: 1px solid #2a3a50; border-radius: 8px; padding: 10px 14px; font-size: 0.75rem; color: #3a4f65; margin-top: 10px; line-height: 1.6; }
     .share-box { background: #0f1923; border: 1px solid #1e5fa8; border-radius: 10px; padding: 16px; margin-top: 16px; }
     .share-box-title { font-size: 0.82rem; font-weight: 700; color: #2e86de; margin-bottom: 6px; }
     .share-box-desc { font-size: 0.78rem; color: #5a8fc0; margin-bottom: 10px; line-height: 1.6; }
@@ -70,12 +71,13 @@
   <div id="screen-top" class="card">
     <div class="step-badge">MENS HEALTH CHECK「QAA」</div>
     <h1>QAA（クアー）</h1>
-    <p class="desc">AMS・ADAMの2種類の国際的な指標で、男性ホルモンの状態を総合的にチェックします。2問ずつ表示されます。<br>※スコアには相互重複している質問があります。<br><span style="color:red;font-weight:bold;">ご自身が感じる感覚でご回答ください</span></p>
+    <p class="desc">AMS・ADAM・JAMQの3種類の国際的な指標で、男性ホルモンの状態を総合的にチェックします。2問ずつ表示されます。<br>※スコアには相互重複している質問があります。<br><span style="color:red;font-weight:bold;">ご自身が感じる感覚でご回答ください</span></p>
     <div class="info-box">
       <div class="info-box-title">📋 チェックの流れ</div>
       <div class="info-box-body">
         STEP 1｜AMSスコア（17問）<br>
         STEP 2｜ADAMスコア（10問）<br>
+        STEP 3｜JAMQスコア（15問）<br>
         RESULT｜総合判定（A〜E）
       </div>
     </div>
@@ -109,7 +111,7 @@
 
   <!-- AMS -->
   <div id="screen-ams" class="card" style="display:none">
-    <div class="step-badge">STEP 1 / 2 — AMS SCORE</div>
+    <div class="step-badge">STEP 1 / 3 — AMS SCORE</div>
     <h1>AMSスコア</h1>
     <p class="desc">各症状の程度を5段階で選択してください。</p>
     <div class="progress-wrap">
@@ -121,7 +123,7 @@
 
   <!-- ADAM -->
   <div id="screen-adam" class="card" style="display:none">
-    <div class="step-badge">STEP 2 / 2 — ADAM SCORE</div>
+    <div class="step-badge">STEP 2 / 3 — ADAM SCORE</div>
     <h1>ADAMスコア</h1>
     <p class="desc">各質問に「はい」「いいえ」でお答えください。</p>
     <div class="progress-wrap">
@@ -129,6 +131,18 @@
       <div class="progress-bar"><div class="progress-fill" id="adam-progress-fill" style="width:0%"></div></div>
     </div>
     <div id="adam-questions"></div>
+  </div>
+
+  <!-- JAMQ -->
+  <div id="screen-jamq" class="card" style="display:none">
+    <div class="step-badge">STEP 3 / 3 — JAMQ SCORE</div>
+    <h1>JAMQスコア</h1>
+    <p class="desc">各症状の程度を4段階で選択してください。<br><span style="font-size:0.78rem;color:#3a4f65;">※JAMQの評価はAMSスコアの基準を準用しています。</span></p>
+    <div class="progress-wrap">
+      <div class="progress-label" id="jamq-progress-label">ANSWERED 0 / 15</div>
+      <div class="progress-bar"><div class="progress-fill" id="jamq-progress-fill" style="width:0%"></div></div>
+    </div>
+    <div id="jamq-questions"></div>
   </div>
 
   <!-- LOADING -->
@@ -150,6 +164,13 @@
     <div class="result-section">
       <div class="result-title">ADAM SCORE</div>
       <div id="r-adam-judge" class="result-judge" style="font-size:0.9rem;margin-top:4px;">-</div>
+    </div>
+    <hr class="divider">
+    <div class="result-section">
+      <div class="result-title">JAMQ SCORE</div>
+      <div class="result-score" style="font-size:1.6rem"><span id="r-jamq-score">0</span> <span style="font-size:0.9rem;color:#5a8fc0;">点</span></div>
+      <div id="r-jamq-judge" class="result-judge">-</div>
+      <div class="note-box">※JAMQの評価はAMSスコアの基準（15〜26点：なし／27〜36点：軽症／37〜49点：中等症／50点以上：重症）を準用しています。</div>
     </div>
     <hr class="divider">
     <div class="result-title" style="text-align:center;">OVERALL GRADE</div>
@@ -204,10 +225,31 @@ const adamQuestions = [
   "最近、仕事の能力が低下したと感じますか？"
 ];
 
+const jamqQuestions = [
+  "体調がすぐれず、気難しくなりがち",
+  "不眠に悩んでいる",
+  "不安感・寂しさを感じる",
+  "くよくよしやすく、気分が沈みがち",
+  "ほてり、のぼせ、多汗がある",
+  "動悸、息切れ、息苦しいことがある",
+  "めまい、吐き気がある",
+  "疲れやすい",
+  "頭痛、頭が重い、肩こりがある",
+  "腰痛、手足の関節の痛み",
+  "手足がこわばる",
+  "手足がしびれたり、ピリピリする",
+  "性欲が減退したと感じる",
+  "勃起力が減退したと感じる",
+  "セックスの頻度"
+];
+const jamqOptions = ["ほとんどない","ややある","かなりある","特につらい"];
+const jamqQ15Options = ["2週間に1〜2回以上","月に1〜2回","月1回未満","全くない"];
+
 let amsAnswers = new Array(17).fill(null);
 let adamAnswers = new Array(10).fill(null);
-let amsVisible = CHUNK, adamVisible = CHUNK;
-let amsTotal = 0, adamPositive = false;
+let jamqAnswers = new Array(15).fill(null);
+let amsVisible = CHUNK, adamVisible = CHUNK, jamqVisible = CHUNK;
+let amsTotal = 0, adamPositive = false, jamqTotal = 0;
 let savedScoreId = null;
 
 function showScreen(id) {
@@ -216,18 +258,24 @@ function showScreen(id) {
   window.scrollTo(0, 0);
 }
 
-function renderQuestion(containerId, i, questions, answers, type, options) {
+function renderQuestion(containerId, i, questions, answers, type, options, altOptions) {
   const block = document.createElement('div');
   block.className = 'question-block' + (answers[i] !== null ? ' answered' : '');
   block.id = 'qb-' + containerId + '-' + i;
   let optHTML = '';
+  const opts = (altOptions && i === 14) ? altOptions : options;
+
   if (type === 'yn') {
     optHTML = '<div class="options-yn">'
       + '<button class="opt-yn'+(answers[i]===true?' selected':'')+'" data-qi="'+i+'" data-val="true">はい</button>'
       + '<button class="opt-yn'+(answers[i]===false?' selected':'')+'" data-qi="'+i+'" data-val="false">いいえ</button>'
       + '</div>';
-  } else {
+  } else if (type === '5') {
     optHTML = '<div class="options-5">'+options.map((o,j)=>
+      '<button class="opt-btn'+(answers[i]===j+1?' selected':'')+'" data-qi="'+i+'" data-val="'+(j+1)+'">'+o+'</button>'
+    ).join('')+'</div>';
+  } else {
+    optHTML = '<div class="options-4">'+opts.map((o,j)=>
       '<button class="opt-btn'+(answers[i]===j+1?' selected':'')+'" data-qi="'+i+'" data-val="'+(j+1)+'">'+o+'</button>'
     ).join('')+'</div>';
   }
@@ -235,10 +283,10 @@ function renderQuestion(containerId, i, questions, answers, type, options) {
   document.getElementById(containerId).appendChild(block);
 }
 
-function renderChunk(containerId, questions, answers, visible, type, options) {
+function renderChunk(containerId, questions, answers, visible, type, options, altOptions) {
   document.getElementById(containerId).innerHTML = '';
   for (let i = 0; i < Math.min(visible, questions.length); i++) {
-    renderQuestion(containerId, i, questions, answers, type, options);
+    renderQuestion(containerId, i, questions, answers, type, options, altOptions);
   }
 }
 
@@ -248,14 +296,14 @@ function updateProgress(answers, total, labelId, fillId) {
   document.getElementById(fillId).style.width = (n/total*100)+'%';
 }
 
-function tryAdvance(containerId, answers, questions, getVis, setVis, type, options, labelId, fillId, onDone) {
+function tryAdvance(containerId, answers, questions, getVis, setVis, type, options, labelId, fillId, onDone, altOptions) {
   updateProgress(answers, questions.length, labelId, fillId);
   if (answers.filter(a=>a!==null).length === questions.length) { setTimeout(onDone, 400); return; }
   const cur = getVis();
   if (answers.slice(0, cur).filter(a=>a!==null).length === cur && cur < questions.length) {
     const nv = Math.min(cur + CHUNK, questions.length);
     setVis(nv);
-    for (let i = cur; i < nv; i++) renderQuestion(containerId, i, questions, answers, type, options);
+    for (let i = cur; i < nv; i++) renderQuestion(containerId, i, questions, answers, type, options, altOptions);
     setTimeout(() => {
       const nb = document.getElementById('qb-'+containerId+'-'+cur);
       if (nb) nb.scrollIntoView({behavior:'smooth',block:'start'});
@@ -296,29 +344,60 @@ document.getElementById('adam-questions').addEventListener('click', e => {
 });
 function calcADAM() {
   adamPositive = adamAnswers[0]||adamAnswers[6]||adamAnswers.filter((v,i)=>i!==0&&i!==6&&v===true).length>=3;
+  startJAMQ();
+}
+
+// JAMQ
+function startJAMQ() {
+  jamqVisible = CHUNK; showScreen('screen-jamq');
+  renderChunk('jamq-questions', jamqQuestions, jamqAnswers, jamqVisible, '4', jamqOptions, jamqQ15Options);
+}
+document.getElementById('jamq-questions').addEventListener('click', e => {
+  const btn = e.target.closest('[data-qi]'); if (!btn) return;
+  const qi = parseInt(btn.dataset.qi), val = parseInt(btn.dataset.val);
+  jamqAnswers[qi] = val;
+  btn.closest('.options-4').querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected'); btn.closest('.question-block').classList.add('answered');
+  tryAdvance('jamq-questions',jamqAnswers,jamqQuestions,()=>jamqVisible,v=>{jamqVisible=v;},'4',jamqOptions,'jamq-progress-label','jamq-progress-fill',calcJAMQ,jamqQ15Options);
+});
+function calcJAMQ() {
+  jamqTotal = jamqAnswers.reduce((s,v)=>s+v,0);
   showOverall();
 }
 
-// 総合判定（AMS＋ADAMのみ）
+// 総合判定
 function calcGrade() {
   let p = 0;
+  // AMS
   if(amsTotal>49)p+=3; else if(amsTotal>36)p+=2; else if(amsTotal>26)p+=1;
+  // ADAM
   if(adamPositive)p+=2;
-  if(p===0)return'A'; if(p<=1)return'B'; if(p<=2)return'C'; if(p<=3)return'D'; return'E';
+  // JAMQ（AMS基準を準用）
+  if(jamqTotal>49)p+=3; else if(jamqTotal>36)p+=2; else if(jamqTotal>26)p+=1;
+  if(p===0)return'A'; if(p<=2)return'B'; if(p<=4)return'C'; if(p<=6)return'D'; return'E';
 }
+
+function jamqJudge(score) {
+  if(score<=26)return{text:'なし',cls:'judge-none'};
+  if(score<=36)return{text:'軽症',cls:'judge-mild'};
+  if(score<=49)return{text:'中等症',cls:'judge-moderate'};
+  return{text:'重症',cls:'judge-severe'};
+}
+
 const gradeLabels={A:'非常に良好',B:'概ね良好',C:'やや注意が必要',D:'注意が必要',E:'早めに専門医へ相談を'};
 const gradeComments={
-  A:'AMSスコア・ADAMスコアともに基準値内です。\n現在の生活習慣を続けながら、定期的にセルフチェックを行いましょう。',
+  A:'3つのスコアがいずれも基準値内です。\n現在の生活習慣を続けながら、定期的にセルフチェックを行いましょう。',
   B:'いくつかの項目で軽度の変化が見られます。\n睡眠・運動・食事のバランスを意識することで改善が期待できます。',
   C:'複数のスコアで注意すべき値が出ています。\n生活習慣の見直しを検討してください。専門医への相談も選択肢です。',
   D:'複数のスコアで顕著な変化が見られます。\n専門医（泌尿器科・メンズヘルス外来）への相談をお勧めします。',
-  E:'スコアが全体的に高い値を示しています。\nできるだけ早めに泌尿器科やメンズヘルス専門外来を受診されることをお勧めします。'
+  E:'3つのスコアが全体的に高い値を示しています。\nできるだけ早めに泌尿器科やメンズヘルス専門外来を受診されることをお勧めします。'
 };
 
 async function showOverall() {
   showScreen('screen-loading');
   const grade = calcGrade();
   const amsJudge = amsTotal<=26?'なし':amsTotal<=36?'軽度':amsTotal<=49?'中等度':'重度';
+  const jJudge = jamqJudge(jamqTotal);
   const ageGroup = document.getElementById('age-group').value;
 
   const saveRes = await fetch('/api/save-score', {
@@ -327,10 +406,12 @@ async function showOverall() {
     body: JSON.stringify({
       ams_score: amsTotal, ams_judge: amsJudge,
       adam_positive: adamPositive,
+      jamq_score: jamqTotal, jamq_judge: jJudge.text,
       overall_grade: grade,
       age_group: ageGroup,
       ams_answers: amsAnswers,
-      adam_answers: adamAnswers
+      adam_answers: adamAnswers,
+      jamq_answers: jamqAnswers
     })
   });
   const saveData = await saveRes.json();
@@ -342,6 +423,9 @@ async function showOverall() {
     rj.textContent=amsJudge;rj.className='result-judge '+(amsTotal<=26?'judge-none':amsTotal<=36?'judge-mild':amsTotal<=49?'judge-moderate':'judge-severe');
     const aj=document.getElementById('r-adam-judge');
     aj.textContent=adamPositive?'陽性':'陰性';aj.className='result-judge '+(adamPositive?'judge-positive':'judge-negative');
+    document.getElementById('r-jamq-score').textContent=jamqTotal;
+    const qj=document.getElementById('r-jamq-judge');
+    qj.textContent=jJudge.text;qj.className='result-judge '+jJudge.cls;
     const ge=document.getElementById('overall-grade');
     ge.textContent=grade;ge.className='overall-grade grade-'+grade;
     document.getElementById('overall-label').textContent=gradeLabels[grade];
@@ -358,6 +442,7 @@ function checkAgeAndStart() {
 
 document.getElementById('start-btn').addEventListener('click', checkAgeAndStart);
 document.getElementById('retry-btn').addEventListener('click', ()=>location.reload());
+
 document.getElementById('copy-url-btn').addEventListener('click', () => {
   if (!savedScoreId) { alert('結果の保存が完了していません。'); return; }
   const url = window.location.origin + '/result?id=' + savedScoreId;
