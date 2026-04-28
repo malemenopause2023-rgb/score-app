@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>チェック結果</title>
+  <title>チェック結果 | QAA</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,6 +29,7 @@
     .judge-severe { background: #2e0000; color: #e74c3c; border: 1px solid #e74c3c; }
     .judge-positive { background: #2e0000; color: #e74c3c; border: 1px solid #e74c3c; }
     .judge-negative { background: #0d2e1a; color: #2ecc71; border: 1px solid #2ecc71; }
+    .divider { border: none; border-top: 1px solid #2a3a50; margin: 20px 0; }
     .section-title { font-size: 0.85rem; font-weight: 700; color: #2e86de; margin-bottom: 12px; letter-spacing: 0.05em; text-transform: uppercase; padding-bottom: 8px; border-bottom: 1px solid #2a3a50; }
     .q-row { padding: 10px 0; border-bottom: 1px solid #1a2535; }
     .q-row:last-child { border-bottom: none; }
@@ -36,6 +37,7 @@
     .q-text { font-size: 0.85rem; color: #8fa8c0; line-height: 1.5; margin-bottom: 4px; }
     .q-answer { font-size: 0.88rem; font-weight: 700; color: #e8edf2; }
     .comment-box { background: #0f1923; border: 1px solid #2a3a50; border-radius: 10px; padding: 14px; font-size: 0.85rem; color: #8fa8c0; line-height: 1.9; white-space: pre-wrap; margin-top: 16px; }
+    .note-box { background: #0f1923; border: 1px solid #2a3a50; border-radius: 8px; padding: 10px 14px; font-size: 0.75rem; color: #3a4f65; margin-top: 10px; line-height: 1.6; }
     .loading { text-align: center; padding: 60px 20px; color: #5a8fc0; font-weight: 700; font-size: 1rem; }
     .error { text-align: center; padding: 60px 20px; color: #e74c3c; font-weight: 700; }
     .note { font-size: 0.75rem; color: #3a4f65; text-align: center; margin-top: 12px; line-height: 1.6; }
@@ -50,10 +52,11 @@
   <div id="content" style="display:none">
     <!-- ヘッダー -->
     <div class="card">
-      <div class="badge">MENS HEALTH CHECK — RESULT</div>
-      <h1>男性ホルモン セルフチェック結果</h1>
+      <div class="badge">MENS HEALTH CHECK「QAA」— RESULT</div>
+      <h1>QAA チェック結果</h1>
       <div class="meta" id="meta-date"></div>
       <div class="meta" id="meta-name"></div>
+      <div class="meta" id="meta-age"></div>
     </div>
 
     <!-- 総合判定 -->
@@ -72,11 +75,16 @@
         <div class="score-label">ADAMスコア</div>
         <div class="score-value"><span id="adam-judge" class="judge">-</span></div>
       </div>
-      <div class="score-row">
+      <div class="score-row" id="jamq-row">
+        <div class="score-label">JAMQスコア</div>
+        <div class="score-value"><span id="jamq-score">-</span>点<span id="jamq-judge" class="judge">-</span></div>
+      </div>
+      <div class="score-row" id="qpad-row" style="display:none">
         <div class="score-label">q-PADスコア</div>
         <div class="score-value"><span id="qpad-score">-</span>点<span id="qpad-judge" class="judge">-</span></div>
       </div>
       <div class="comment-box" id="comment-box"></div>
+      <div class="note-box" id="jamq-note" style="display:none">※JAMQの評価はAMSスコアの基準（15〜26点：なし／27〜36点：軽症／37〜49点：中等症／50点以上：重症）を準用しています。</div>
       <p class="note">※医療診断ではありません。気になる方は専門医にご相談ください。</p>
     </div>
 
@@ -92,11 +100,18 @@
       <div id="adam-details"></div>
     </div>
 
-    <!-- q-PAD詳細 -->
-    <div class="card">
+    <!-- JAMQ詳細 -->
+    <div class="card" id="jamq-detail-card">
+      <div class="section-title">JAMQ SCORE — 設問詳細</div>
+      <div id="jamq-details"></div>
+    </div>
+
+    <!-- q-PAD詳細（旧データ用） -->
+    <div class="card" id="qpad-detail-card" style="display:none">
       <div class="section-title">q-PAD SCORE — 設問詳細</div>
       <div id="qpad-details"></div>
     </div>
+
   </div>
 
   <div id="error" class="card" style="display:none">
@@ -125,17 +140,15 @@ function formatJST(str) {
     const [h, m] = time.split(':').map(Number);
     const jstH = (h + 9) % 24;
     return y + '年' + mo + '月' + da + '日 ' + jstH + '時' + String(m).padStart(2,'0') + '分';
-  } catch(e) {
-    return str;
-  }
+  } catch(e) { return str; }
 }
 
 function judgeClass(judge) {
   if (!judge) return '';
   if (judge === 'なし' || judge === '基準値以下') return 'judge-none';
-  if (judge === '軽度') return 'judge-mild';
-  if (judge === '中等度') return 'judge-moderate';
-  if (judge === '重度' || judge === 'LOH症候群の疑いあり') return 'judge-severe';
+  if (judge === '軽度' || judge === '軽症') return 'judge-mild';
+  if (judge === '中等度' || judge === '中等症') return 'judge-moderate';
+  if (judge === '重度' || judge === '重症' || judge === 'LOH症候群の疑いあり') return 'judge-severe';
   return '';
 }
 
@@ -166,12 +179,12 @@ async function load() {
     const json = await res.json();
     const score = json.score;
     const details = json.details;
-
     if (!score) { showError(); return; }
 
-    // 日時・名前
+    // 日時・名前・年代
     document.getElementById('meta-date').textContent = '日時：' + formatJST(score.created_at);
     document.getElementById('meta-name').textContent = '名前：' + (score.line_name || '匿名');
+    document.getElementById('meta-age').textContent = '年代：' + (score.age_group || '未選択');
 
     // 総合判定
     const grade = score.overall_grade;
@@ -192,16 +205,34 @@ async function load() {
     adamJ.textContent = score.adam_positive ? '陽性' : '陰性';
     adamJ.className = 'judge ' + (score.adam_positive ? 'judge-positive' : 'judge-negative');
 
-    // q-PAD
-    document.getElementById('qpad-score').textContent = score.qpad_score;
-    const qpadJ = document.getElementById('qpad-judge');
-    qpadJ.textContent = score.qpad_judge;
-    qpadJ.className = 'judge ' + judgeClass(score.qpad_judge);
+    // JAMQ or q-PAD（新旧対応）
+    const jamqDetails = details.filter(d => d.test_type === 'JAMQ');
+    const qpadDetails = details.filter(d => d.test_type === 'qPAD');
 
-    // 設問詳細
+    if (score.jamq_score !== null && score.jamq_score !== undefined) {
+      // 新データ（JAMQ）
+      document.getElementById('jamq-score').textContent = score.jamq_score;
+      const jamqJ = document.getElementById('jamq-judge');
+      jamqJ.textContent = score.jamq_judge || '-';
+      jamqJ.className = 'judge ' + judgeClass(score.jamq_judge);
+      document.getElementById('jamq-note').style.display = 'block';
+      renderDetails('jamq-details', jamqDetails);
+    } else {
+      // 旧データ（q-PAD）
+      document.getElementById('jamq-row').style.display = 'none';
+      document.getElementById('jamq-detail-card').style.display = 'none';
+      document.getElementById('qpad-row').style.display = 'flex';
+      document.getElementById('qpad-detail-card').style.display = 'block';
+      document.getElementById('qpad-score').textContent = score.qpad_score;
+      const qpadJ = document.getElementById('qpad-judge');
+      qpadJ.textContent = score.qpad_judge || '-';
+      qpadJ.className = 'judge ' + judgeClass(score.qpad_judge);
+      renderDetails('qpad-details', qpadDetails);
+    }
+
+    // AMS・ADAM詳細
     renderDetails('ams-details', details.filter(d => d.test_type === 'AMS'));
     renderDetails('adam-details', details.filter(d => d.test_type === 'ADAM'));
-    renderDetails('qpad-details', details.filter(d => d.test_type === 'qPAD'));
 
     document.getElementById('loading').style.display = 'none';
     document.getElementById('content').style.display = 'block';
