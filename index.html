@@ -61,6 +61,11 @@
     .info-box { background: #0f1923; border: 1px solid #2a3a50; border-radius: 10px; padding: 14px; margin-bottom: 12px; }
     .info-box-title { font-size: 0.78rem; font-weight: 700; color: #2e86de; margin-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase; }
     .info-box-body { font-size: 0.83rem; color: #6a8099; line-height: 1.9; }
+    .user-badge { background: #0f1923; border: 1px solid #1e5fa8; border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; color: #2e86de; font-weight: 700; margin-bottom: 16px; display: none; }
+    .line-btn { width: 100%; padding: 16px; background: #06C755; color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 12px; letter-spacing: 0.05em; transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .line-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .skip-btn { width: 100%; padding: 12px; background: transparent; color: #3a4f65; border: 1px solid #2a3a50; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.18s; }
+    .skip-btn:hover { background: #1e2e42; color: #5a8fc0; }
     .age-select { width: 100%; padding: 12px; background: #0f1923; border: 1px solid #2a3a50; border-radius: 8px; color: #e8edf2; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; outline: none; cursor: pointer; appearance: none; }
     .age-select option { background: #1a2535; }
   </style>
@@ -81,6 +86,8 @@
         RESULT｜総合判定（A〜E）
       </div>
     </div>
+
+    <!-- 年代選択 -->
     <div style="margin-bottom:16px;">
       <div style="font-size:0.82rem;font-weight:700;color:#2e86de;margin-bottom:8px;">📋 年代を選択してください</div>
       <select id="age-group" class="age-select">
@@ -105,7 +112,14 @@
         <option value="70代後半">70代後半（78〜79歳）</option>
       </select>
     </div>
+
+    <div class="user-badge" id="user-badge">✅ LINEでログイン済み</div>
     <button class="start-btn" id="start-btn">チェックを開始する →</button>
+    <button class="line-btn" id="line-login-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.03 2 11c0 3.08 1.67 5.77 4.19 7.4L5.5 22l3.79-1.97C10.1 20.63 11.03 21 12 21c5.52 0 10-4.03 10-9s-4.48-9-10-9z"/></svg>
+      LINEでログインして記録を残す
+    </button>
+    <button class="skip-btn" id="skip-btn">ログインせずに始める</button>
     <p class="note">※このチェックは医療診断ではありません。</p>
   </div>
 
@@ -252,6 +266,38 @@ let amsVisible = CHUNK, adamVisible = CHUNK, jamqVisible = CHUNK;
 let amsTotal = 0, adamPositive = false, jamqTotal = 0;
 let savedScoreId = null;
 
+function getLineUid() {
+  return document.cookie.split(';').map(c=>c.trim()).find(c=>c.startsWith('line_uid='))?.split('=')[1] || null;
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const uid = getLineUid();
+  if (uid) {
+    document.getElementById('user-badge').style.display = 'block';
+    document.getElementById('line-login-btn').style.display = 'none';
+    document.getElementById('skip-btn').style.display = 'none';
+  }
+});
+
+function lineLogin() {
+  const age = document.getElementById('age-group').value;
+  if (!age) { alert('年代を選択してください'); return; }
+  const params = new URLSearchParams({
+    response_type: 'code',
+    client_id: '2009657612',
+    redirect_uri: window.location.origin + '/api/line-callback',
+    state: Math.random().toString(36).substring(2),
+    scope: 'profile'
+  });
+  window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?' + params.toString();
+}
+
+function checkAgeAndStart() {
+  const age = document.getElementById('age-group').value;
+  if (!age) { alert('年代を選択してください'); return; }
+  startAMS();
+}
+
 function showScreen(id) {
   document.querySelectorAll('.card').forEach(c => c.style.display = 'none');
   document.getElementById(id).style.display = 'block';
@@ -264,7 +310,6 @@ function renderQuestion(containerId, i, questions, answers, type, options, altOp
   block.id = 'qb-' + containerId + '-' + i;
   let optHTML = '';
   const opts = (altOptions && i === 14) ? altOptions : options;
-
   if (type === 'yn') {
     optHTML = '<div class="options-yn">'
       + '<button class="opt-yn'+(answers[i]===true?' selected':'')+'" data-qi="'+i+'" data-val="true">はい</button>'
@@ -368,11 +413,8 @@ function calcJAMQ() {
 // 総合判定
 function calcGrade() {
   let p = 0;
-  // AMS
   if(amsTotal>49)p+=3; else if(amsTotal>36)p+=2; else if(amsTotal>26)p+=1;
-  // ADAM
   if(adamPositive)p+=2;
-  // JAMQ（AMS基準を準用）
   if(jamqTotal>49)p+=3; else if(jamqTotal>36)p+=2; else if(jamqTotal>26)p+=1;
   if(p===0)return'A'; if(p<=2)return'B'; if(p<=4)return'C'; if(p<=6)return'D'; return'E';
 }
@@ -434,13 +476,9 @@ async function showOverall() {
   },1500);
 }
 
-function checkAgeAndStart() {
-  const age = document.getElementById('age-group').value;
-  if (!age) { alert('年代を選択してください'); return; }
-  startAMS();
-}
-
 document.getElementById('start-btn').addEventListener('click', checkAgeAndStart);
+document.getElementById('line-login-btn').addEventListener('click', lineLogin);
+document.getElementById('skip-btn').addEventListener('click', checkAgeAndStart);
 document.getElementById('retry-btn').addEventListener('click', ()=>location.reload());
 
 document.getElementById('copy-url-btn').addEventListener('click', () => {
