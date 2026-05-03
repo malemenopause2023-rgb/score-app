@@ -119,7 +119,6 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.03 2 11c0 3.08 1.67 5.77 4.19 7.4L5.5 22l3.79-1.97C10.1 20.63 11.03 21 12 21c5.52 0 10-4.03 10-9s-4.48-9-10-9z"/></svg>
       LINEでログインして記録を残す
     </button>
-    <button class="skip-btn" id="skip-btn">ログインせずに始める</button>
     <p class="note">※このチェックは医療診断ではありません。</p>
   </div>
 
@@ -478,7 +477,6 @@ async function showOverall() {
 
 document.getElementById('start-btn').addEventListener('click', checkAgeAndStart);
 document.getElementById('line-login-btn').addEventListener('click', lineLogin);
-document.getElementById('skip-btn').addEventListener('click', checkAgeAndStart);
 document.getElementById('retry-btn').addEventListener('click', ()=>location.reload());
 
 document.getElementById('copy-url-btn').addEventListener('click', () => {
