@@ -10,7 +10,7 @@ module.exports = async function handler(req, res) {
     const {
       ams_score, ams_judge, adam_positive,
       jamq_score, jamq_judge, overall_grade,
-      age_group,
+      age_group, company_code,
       ams_answers, adam_answers, jamq_answers
     } = req.body
 
@@ -31,6 +31,7 @@ module.exports = async function handler(req, res) {
         ams_score, ams_judge, adam_positive,
         jamq_score, jamq_judge, overall_grade,
         age_group,
+        company_code: company_code || null,
         line_uid: lineUid,
         line_name: lineName
       })
@@ -83,7 +84,8 @@ module.exports = async function handler(req, res) {
           score_id: scoreId, line_uid: lineUid, line_name: lineName,
           test_type: 'AMS', question_no: i + 1,
           question_text: amsQList[i],
-          answer_value: val, answer_label: amsLabels[val - 1]
+          answer_value: val, answer_label: amsLabels[val - 1],
+          company_code: company_code || null
         })
       })
     }
@@ -94,7 +96,8 @@ module.exports = async function handler(req, res) {
           score_id: scoreId, line_uid: lineUid, line_name: lineName,
           test_type: 'ADAM', question_no: i + 1,
           question_text: adamQList[i],
-          answer_value: val ? 1 : 0, answer_label: val ? 'はい' : 'いいえ'
+          answer_value: val ? 1 : 0, answer_label: val ? 'はい' : 'いいえ',
+          company_code: company_code || null
         })
       })
     }
@@ -106,7 +109,8 @@ module.exports = async function handler(req, res) {
           test_type: 'JAMQ', question_no: i + 1,
           question_text: jamqQList[i],
           answer_value: val,
-          answer_label: i === 14 ? jamqQ15Labels[val - 1] : jamqLabels[val - 1]
+          answer_label: i === 14 ? jamqQ15Labels[val - 1] : jamqLabels[val - 1],
+          company_code: company_code || null
         })
       })
     }
