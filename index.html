@@ -29,11 +29,10 @@
     .opt-yn { flex: 1; text-align: center; padding: 14px; border-radius: 8px; border: 1px solid #2a3a50; background: #1a2535; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; color: #8fa8c0; cursor: pointer; transition: all 0.18s; }
     .opt-yn:hover { background: #1e2e42; border-color: #1e5fa8; color: #c8d6e5; }
     .opt-yn.selected { background: linear-gradient(135deg,#1e5fa8,#2e86de); border-color: #2e86de; color: white; }
-    .next-btn, .start-btn { width: 100%; padding: 16px; background: linear-gradient(135deg,#1e5fa8,#2e86de); color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 20px; letter-spacing: 0.05em; transition: all 0.18s; }
-    .next-btn:hover, .start-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .start-btn { width: 100%; padding: 16px; background: linear-gradient(135deg,#1e5fa8,#2e86de); color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 20px; letter-spacing: 0.05em; transition: all 0.18s; }
+    .start-btn:hover { opacity: 0.9; transform: translateY(-1px); }
     .result-section { margin-bottom: 20px; }
     .result-title { font-size: 0.85rem; font-weight: 700; color: #5a8fc0; margin-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase; }
-    .result-score { font-size: 2.2rem; font-weight: 900; color: #e8edf2; }
     .result-judge { display: inline-block; padding: 4px 14px; border-radius: 4px; font-size: 0.82rem; font-weight: 700; margin-top: 6px; letter-spacing: 0.05em; }
     .judge-none { background: #0d2e1a; color: #2ecc71; border: 1px solid #2ecc71; }
     .judge-mild { background: #2e1f00; color: #f39c12; border: 1px solid #f39c12; }
@@ -68,6 +67,18 @@
     .skip-btn:hover { background: #1e2e42; color: #5a8fc0; }
     .age-select { width: 100%; padding: 12px; background: #0f1923; border: 1px solid #2a3a50; border-radius: 8px; color: #e8edf2; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; outline: none; cursor: pointer; appearance: none; }
     .age-select option { background: #1a2535; }
+    .code-wrap { margin-bottom: 16px; }
+    .code-label { font-size: 0.82rem; font-weight: 700; color: #2e86de; margin-bottom: 6px; display: block; }
+    .code-row { display: flex; gap: 8px; }
+    .code-input { flex: 1; padding: 12px; background: #0f1923; border: 1px solid #2a3a50; border-radius: 8px; color: #e8edf2; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; outline: none; text-transform: uppercase; letter-spacing: 0.1em; }
+    .code-input::placeholder { color: #3a4f65; text-transform: none; letter-spacing: normal; }
+    .code-input.valid { border-color: #2ecc71; }
+    .code-input.invalid { border-color: #e74c3c; }
+    .code-btn { padding: 12px 16px; background: #1e5fa8; color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.18s; white-space: nowrap; }
+    .code-btn:hover { background: #2e86de; }
+    .code-msg { font-size: 0.78rem; margin-top: 6px; }
+    .code-msg.ok { color: #2ecc71; }
+    .code-msg.ng { color: #e74c3c; }
   </style>
 </head>
 <body>
@@ -113,12 +124,23 @@
       </select>
     </div>
 
+    <!-- 企業・参加者コード -->
+    <div class="code-wrap">
+      <span class="code-label">🔑 企業・参加者コード（お持ちの方のみ）</span>
+      <div class="code-row">
+        <input type="text" id="company-code" class="code-input" maxlength="6" placeholder="半角英数字6桁">
+        <button class="code-btn" id="code-check-btn">照合</button>
+      </div>
+      <div class="code-msg" id="code-msg"></div>
+    </div>
+
     <div class="user-badge" id="user-badge">✅ LINEでログイン済み</div>
     <button class="start-btn" id="start-btn">チェックを開始する →</button>
     <button class="line-btn" id="line-login-btn">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.03 2 11c0 3.08 1.67 5.77 4.19 7.4L5.5 22l3.79-1.97C10.1 20.63 11.03 21 12 21c5.52 0 10-4.03 10-9s-4.48-9-10-9z"/></svg>
       LINEでログインして記録を残す
     </button>
+    <button class="skip-btn" id="skip-btn">ログインせずに始める</button>
     <p class="note">※このチェックは医療診断ではありません。</p>
   </div>
 
@@ -203,6 +225,7 @@
 
 <script>
 const CHUNK = 2;
+let validatedCode = null;
 
 const amsQuestions = [
   "総合的な調子の悪さ（健康状態の低下）",
@@ -276,7 +299,62 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('line-login-btn').style.display = 'none';
     document.getElementById('skip-btn').style.display = 'none';
   }
+
+  // コード照合
+  document.getElementById('code-check-btn').addEventListener('click', validateCode);
+  document.getElementById('company-code').addEventListener('keydown', e => {
+    if (e.key === 'Enter') validateCode();
+  });
+  document.getElementById('company-code').addEventListener('input', () => {
+    validatedCode = null;
+    const input = document.getElementById('company-code');
+    input.className = 'code-input';
+    document.getElementById('code-msg').textContent = '';
+  });
 });
+
+async function validateCode() {
+  const input = document.getElementById('company-code');
+  const code = input.value.trim().toUpperCase();
+  const msg = document.getElementById('code-msg');
+
+  if (!code) {
+    msg.textContent = 'コードを入力してください';
+    msg.className = 'code-msg ng';
+    return;
+  }
+  if (code.length !== 6) {
+    msg.textContent = '6桁のコードを入力してください';
+    msg.className = 'code-msg ng';
+    return;
+  }
+
+  msg.textContent = '照合中...';
+  msg.className = 'code-msg';
+
+  try {
+    const res = await fetch('/api/validate-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code })
+    });
+    const data = await res.json();
+    if (data.valid) {
+      validatedCode = code;
+      input.className = 'code-input valid';
+      msg.textContent = '✅ ' + (data.label || code) + ' のコードが確認されました';
+      msg.className = 'code-msg ok';
+    } else {
+      validatedCode = null;
+      input.className = 'code-input invalid';
+      msg.textContent = '❌ ' + (data.message || '無効なコードです');
+      msg.className = 'code-msg ng';
+    }
+  } catch(e) {
+    msg.textContent = '照合に失敗しました。もう一度お試しください。';
+    msg.className = 'code-msg ng';
+  }
+}
 
 function lineLogin() {
   const age = document.getElementById('age-group').value;
@@ -450,6 +528,7 @@ async function showOverall() {
       jamq_score: jamqTotal, jamq_judge: jJudge.text,
       overall_grade: grade,
       age_group: ageGroup,
+      company_code: validatedCode || null,
       ams_answers: amsAnswers,
       adam_answers: adamAnswers,
       jamq_answers: jamqAnswers
@@ -477,6 +556,7 @@ async function showOverall() {
 
 document.getElementById('start-btn').addEventListener('click', checkAgeAndStart);
 document.getElementById('line-login-btn').addEventListener('click', lineLogin);
+document.getElementById('skip-btn').addEventListener('click', checkAgeAndStart);
 document.getElementById('retry-btn').addEventListener('click', ()=>location.reload());
 
 document.getElementById('copy-url-btn').addEventListener('click', () => {
