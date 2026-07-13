@@ -25,13 +25,15 @@ module.exports = async function handler(req, res) {
       if (key === 'line_name') lineName = decodeURIComponent(val)
     })
 
+    const cc = company_code || null
+
     const { data: scoreData, error: scoreError } = await supabase
       .from('scores')
       .insert({
         ams_score, ams_judge, adam_positive,
         jamq_score, jamq_judge, overall_grade,
         age_group,
-        company_code: company_code || null,
+        company_code: cc,
         line_uid: lineUid,
         line_name: lineName
       })
@@ -81,11 +83,15 @@ module.exports = async function handler(req, res) {
     if (ams_answers) {
       ams_answers.forEach((val, i) => {
         details.push({
-          score_id: scoreId, line_uid: lineUid, line_name: lineName,
-          test_type: 'AMS', question_no: i + 1,
+          score_id: scoreId,
+          line_uid: lineUid,
+          line_name: lineName,
+          test_type: 'AMS',
+          question_no: i + 1,
           question_text: amsQList[i],
-          answer_value: val, answer_label: amsLabels[val - 1],
-          company_code: company_code || null
+          answer_value: val,
+          answer_label: amsLabels[val - 1],
+          company_code: cc
         })
       })
     }
@@ -93,11 +99,15 @@ module.exports = async function handler(req, res) {
     if (adam_answers) {
       adam_answers.forEach((val, i) => {
         details.push({
-          score_id: scoreId, line_uid: lineUid, line_name: lineName,
-          test_type: 'ADAM', question_no: i + 1,
+          score_id: scoreId,
+          line_uid: lineUid,
+          line_name: lineName,
+          test_type: 'ADAM',
+          question_no: i + 1,
           question_text: adamQList[i],
-          answer_value: val ? 1 : 0, answer_label: val ? 'はい' : 'いいえ',
-          company_code: company_code || null
+          answer_value: val ? 1 : 0,
+          answer_label: val ? 'はい' : 'いいえ',
+          company_code: cc
         })
       })
     }
@@ -105,17 +115,25 @@ module.exports = async function handler(req, res) {
     if (jamq_answers) {
       jamq_answers.forEach((val, i) => {
         details.push({
-          score_id: scoreId, line_uid: lineUid, line_name: lineName,
-          test_type: 'JAMQ', question_no: i + 1,
+          score_id: scoreId,
+          line_uid: lineUid,
+          line_name: lineName,
+          test_type: 'JAMQ',
+          question_no: i + 1,
           question_text: jamqQList[i],
           answer_value: val,
           answer_label: i === 14 ? jamqQ15Labels[val - 1] : jamqLabels[val - 1],
-          company_code: company_code || null
+          company_code: cc
         })
       })
     }
 
-    await supabase.from('score_details').insert(details)
+    if (details.length > 0) {
+      const { error: detailError } = await supabase
+        .from('score_details')
+        .insert(details)
+      if (detailError) console.error('score_details error:', detailError)
+    }
 
     res.status(200).json({ ok: true, id: scoreId })
   } catch (err) {
