@@ -19,21 +19,22 @@
     .progress-fill { height: 100%; background: linear-gradient(90deg,#1e5fa8,#2e86de); border-radius: 2px; transition: width 0.4s ease; }
     .question-block { margin-bottom: 16px; border-radius: 10px; padding: 16px; background: #0f1923; border: 1px solid #2a3a50; transition: all 0.3s; }
     .question-block.answered { border-color: #1e5fa8; background: #121d2e; }
-    .q-num { font-size: 0.72rem; color: #2e86de; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .q-num { font-size: 0.72rem; color: #2e86de; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.08em; }
     .q-text { font-size: 0.95rem; font-weight: 700; color: #c8d6e5; line-height: 1.6; margin-bottom: 14px; }
     .options-5, .options-4 { display: flex; flex-direction: column; gap: 7px; }
     .options-yn { display: flex; gap: 10px; }
-    .opt-btn { background: #1a2535; border: 1px solid #2a3a50; border-radius: 8px; padding: 11px 14px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; font-weight: 400; color: #8fa8c0; cursor: pointer; transition: all 0.18s; text-align: left; width: 100%; }
+    .opt-btn { background: #1a2535; border: 1px solid #2a3a50; border-radius: 8px; padding: 11px 14px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; color: #8fa8c0; cursor: pointer; transition: all 0.18s; text-align: left; width: 100%; }
     .opt-btn:hover { background: #1e2e42; border-color: #1e5fa8; color: #c8d6e5; }
     .opt-btn.selected { background: linear-gradient(135deg,#1e5fa8,#2e86de); border-color: #2e86de; color: white; font-weight: 700; }
     .opt-yn { flex: 1; text-align: center; padding: 14px; border-radius: 8px; border: 1px solid #2a3a50; background: #1a2535; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; color: #8fa8c0; cursor: pointer; transition: all 0.18s; }
     .opt-yn:hover { background: #1e2e42; border-color: #1e5fa8; color: #c8d6e5; }
     .opt-yn.selected { background: linear-gradient(135deg,#1e5fa8,#2e86de); border-color: #2e86de; color: white; }
-    .start-btn { width: 100%; padding: 16px; background: linear-gradient(135deg,#1e5fa8,#2e86de); color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 20px; letter-spacing: 0.05em; transition: all 0.18s; }
+    .start-btn { width: 100%; padding: 16px; background: linear-gradient(135deg,#1e5fa8,#2e86de); color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 20px; transition: all 0.18s; }
     .start-btn:hover { opacity: 0.9; transform: translateY(-1px); }
     .result-section { margin-bottom: 20px; }
     .result-title { font-size: 0.85rem; font-weight: 700; color: #5a8fc0; margin-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase; }
-    .result-judge { display: inline-block; padding: 4px 14px; border-radius: 4px; font-size: 0.82rem; font-weight: 700; margin-top: 6px; letter-spacing: 0.05em; }
+    .result-score { font-size: 1.6rem; font-weight: 900; color: #e8edf2; }
+    .result-judge { display: inline-block; padding: 4px 14px; border-radius: 4px; font-size: 0.82rem; font-weight: 700; margin-top: 6px; }
     .judge-none { background: #0d2e1a; color: #2ecc71; border: 1px solid #2ecc71; }
     .judge-mild { background: #2e1f00; color: #f39c12; border: 1px solid #f39c12; }
     .judge-moderate { background: #2e1500; color: #e67e22; border: 1px solid #e67e22; }
@@ -43,26 +44,25 @@
     .divider { border: none; border-top: 1px solid #2a3a50; margin: 20px 0; }
     .overall-grade { text-align: center; font-size: 7rem; font-weight: 900; line-height: 1; margin: 16px 0; }
     .grade-A{color:#2ecc71;} .grade-B{color:#27ae60;} .grade-C{color:#f39c12;} .grade-D{color:#e67e22;} .grade-E{color:#e74c3c;}
-    .overall-label { text-align: center; font-size: 0.95rem; font-weight: 700; color: #7a8fa6; margin-bottom: 16px; letter-spacing: 0.05em; }
+    .overall-label { text-align: center; font-size: 0.95rem; font-weight: 700; color: #7a8fa6; margin-bottom: 16px; }
     .comment-box { background: #0f1923; border: 1px solid #2a3a50; border-radius: 10px; padding: 16px; font-size: 0.88rem; color: #8fa8c0; line-height: 1.9; white-space: pre-wrap; }
     .note-box { background: #0f1923; border: 1px solid #2a3a50; border-radius: 8px; padding: 10px 14px; font-size: 0.75rem; color: #3a4f65; margin-top: 10px; line-height: 1.6; }
     .share-box { background: #0f1923; border: 1px solid #1e5fa8; border-radius: 10px; padding: 16px; margin-top: 16px; }
     .share-box-title { font-size: 0.82rem; font-weight: 700; color: #2e86de; margin-bottom: 6px; }
     .share-box-desc { font-size: 0.78rem; color: #5a8fc0; margin-bottom: 10px; line-height: 1.6; }
-    .copy-btn { width: 100%; padding: 14px; background: linear-gradient(135deg,#1e5fa8,#2e86de); color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.18s; }
-    .copy-btn:hover { opacity: 0.9; }
+    .copy-btn { width: 100%; padding: 14px; background: linear-gradient(135deg,#1e5fa8,#2e86de); color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; }
     .copy-msg { font-size: 0.78rem; color: #2ecc71; text-align: center; margin-top: 8px; display: none; }
-    .retry-btn { width: 100%; margin-top: 12px; padding: 14px; background: transparent; color: #2e86de; border: 1px solid #1e5fa8; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; letter-spacing: 0.05em; transition: all 0.18s; }
+    .retry-btn { width: 100%; margin-top: 12px; padding: 14px; background: transparent; color: #2e86de; border: 1px solid #1e5fa8; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.18s; }
     .retry-btn:hover { background: #1e2e42; }
     .note { font-size: 0.75rem; color: #3a4f65; text-align: center; margin-top: 16px; line-height: 1.6; }
     .loading-icon { font-size: 3rem; animation: spin 1.2s linear infinite; display: block; margin-bottom: 12px; text-align: center; }
     @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
     .info-box { background: #0f1923; border: 1px solid #2a3a50; border-radius: 10px; padding: 14px; margin-bottom: 12px; }
-    .info-box-title { font-size: 0.78rem; font-weight: 700; color: #2e86de; margin-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase; }
+    .info-box-title { font-size: 0.78rem; font-weight: 700; color: #2e86de; margin-bottom: 8px; text-transform: uppercase; }
     .info-box-body { font-size: 0.83rem; color: #6a8099; line-height: 1.9; }
     .user-badge { background: #0f1923; border: 1px solid #1e5fa8; border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; color: #2e86de; font-weight: 700; margin-bottom: 16px; display: none; }
-    .line-btn { width: 100%; padding: 16px; background: #06C755; color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 12px; letter-spacing: 0.05em; transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .line-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .line-btn { width: 100%; padding: 16px; background: #06C755; color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 12px; transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .line-btn:hover { opacity: 0.9; }
     .skip-btn { width: 100%; padding: 12px; background: transparent; color: #3a4f65; border: 1px solid #2a3a50; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.18s; }
     .skip-btn:hover { background: #1e2e42; color: #5a8fc0; }
     .age-select { width: 100%; padding: 12px; background: #0f1923; border: 1px solid #2a3a50; border-radius: 8px; color: #e8edf2; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; outline: none; cursor: pointer; appearance: none; }
@@ -74,7 +74,7 @@
     .code-input::placeholder { color: #3a4f65; text-transform: none; letter-spacing: normal; }
     .code-input.valid { border-color: #2ecc71; }
     .code-input.invalid { border-color: #e74c3c; }
-    .code-btn { padding: 12px 16px; background: #1e5fa8; color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.18s; white-space: nowrap; }
+    .code-btn { padding: 12px 16px; background: #1e5fa8; color: white; border: none; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-size: 0.82rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
     .code-btn:hover { background: #2e86de; }
     .code-msg { font-size: 0.78rem; margin-top: 6px; }
     .code-msg.ok { color: #2ecc71; }
@@ -190,20 +190,21 @@
   <div id="screen-overall" class="card" style="display:none">
     <div class="step-badge">FINAL RESULT</div>
     <h1>総合判定結果</h1>
+
     <div class="result-section">
       <div class="result-title">AMS SCORE</div>
-      <div class="result-score" style="font-size:1.6rem"><span id="r-ams-score">0</span> <span style="font-size:0.9rem;color:#5a8fc0;">点</span></div>
+      <div class="result-score"><span id="r-ams-score">0</span><span style="font-size:0.9rem;color:#5a8fc0;margin-left:4px;">点</span></div>
       <div id="r-ams-judge" class="result-judge">-</div>
     </div>
     <hr class="divider">
     <div class="result-section">
       <div class="result-title">ADAM SCORE</div>
-      <div id="r-adam-judge" class="result-judge" style="font-size:0.9rem;margin-top:4px;">-</div>
+      <div id="r-adam-judge" class="result-judge" style="margin-top:4px;">-</div>
     </div>
     <hr class="divider">
     <div class="result-section">
       <div class="result-title">JAMQ SCORE</div>
-      <div class="result-score" style="font-size:1.6rem"><span id="r-jamq-score">0</span> <span style="font-size:0.9rem;color:#5a8fc0;">点</span></div>
+      <div class="result-score"><span id="r-jamq-score">0</span><span style="font-size:0.9rem;color:#5a8fc0;margin-left:4px;">点</span></div>
       <div id="r-jamq-judge" class="result-judge">-</div>
       <div class="note-box">※JAMQの評価はAMSスコアの基準（15〜26点：なし／27〜36点：軽症／37〜49点：中等症／50点以上：重症）を準用しています。</div>
     </div>
@@ -212,6 +213,7 @@
     <div class="overall-grade" id="overall-grade">-</div>
     <div class="overall-label" id="overall-label">-</div>
     <div class="comment-box" id="overall-comment">-</div>
+
     <div class="share-box">
       <div class="share-box-title">🔗 結果を専門医に共有する</div>
       <div class="share-box-desc">このURLを医師やご家族に送ることで、設問ごとの詳細な結果を共有できます。</div>
@@ -299,17 +301,15 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('line-login-btn').style.display = 'none';
     document.getElementById('skip-btn').style.display = 'none';
   }
-
-  // コード照合
   document.getElementById('code-check-btn').addEventListener('click', validateCode);
   document.getElementById('company-code').addEventListener('keydown', e => {
     if (e.key === 'Enter') validateCode();
   });
   document.getElementById('company-code').addEventListener('input', () => {
     validatedCode = null;
-    const input = document.getElementById('company-code');
-    input.className = 'code-input';
+    document.getElementById('company-code').className = 'code-input';
     document.getElementById('code-msg').textContent = '';
+    document.getElementById('code-msg').className = 'code-msg';
   });
 });
 
@@ -317,21 +317,9 @@ async function validateCode() {
   const input = document.getElementById('company-code');
   const code = input.value.trim().toUpperCase();
   const msg = document.getElementById('code-msg');
-
-  if (!code) {
-    msg.textContent = 'コードを入力してください';
-    msg.className = 'code-msg ng';
-    return;
-  }
-  if (code.length !== 6) {
-    msg.textContent = '6桁のコードを入力してください';
-    msg.className = 'code-msg ng';
-    return;
-  }
-
-  msg.textContent = '照合中...';
-  msg.className = 'code-msg';
-
+  if (!code) { msg.textContent = 'コードを入力してください'; msg.className = 'code-msg ng'; return; }
+  if (code.length !== 6) { msg.textContent = '6桁のコードを入力してください'; msg.className = 'code-msg ng'; return; }
+  msg.textContent = '照合中...'; msg.className = 'code-msg';
   try {
     const res = await fetch('/api/validate-code', {
       method: 'POST',
@@ -360,11 +348,9 @@ function lineLogin() {
   const age = document.getElementById('age-group').value;
   if (!age) { alert('年代を選択してください'); return; }
   const params = new URLSearchParams({
-    response_type: 'code',
-    client_id: '2009657612',
+    response_type: 'code', client_id: '2009657612',
     redirect_uri: window.location.origin + '/api/line-callback',
-    state: Math.random().toString(36).substring(2),
-    scope: 'profile'
+    state: Math.random().toString(36).substring(2), scope: 'profile'
   });
   window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?' + params.toString();
 }
@@ -446,10 +432,7 @@ document.getElementById('ams-questions').addEventListener('click', e => {
   btn.classList.add('selected'); btn.closest('.question-block').classList.add('answered');
   tryAdvance('ams-questions',amsAnswers,amsQuestions,()=>amsVisible,v=>{amsVisible=v;},'5',amsOptions,'ams-progress-label','ams-progress-fill',calcAMS);
 });
-function calcAMS() {
-  amsTotal = amsAnswers.reduce((s,v)=>s+v,0);
-  startADAM();
-}
+function calcAMS() { amsTotal = amsAnswers.reduce((s,v)=>s+v,0); startADAM(); }
 
 // ADAM
 function startADAM() {
@@ -482,12 +465,8 @@ document.getElementById('jamq-questions').addEventListener('click', e => {
   btn.classList.add('selected'); btn.closest('.question-block').classList.add('answered');
   tryAdvance('jamq-questions',jamqAnswers,jamqQuestions,()=>jamqVisible,v=>{jamqVisible=v;},'4',jamqOptions,'jamq-progress-label','jamq-progress-fill',calcJAMQ,jamqQ15Options);
 });
-function calcJAMQ() {
-  jamqTotal = jamqAnswers.reduce((s,v)=>s+v,0);
-  showOverall();
-}
+function calcJAMQ() { jamqTotal = jamqAnswers.reduce((s,v)=>s+v,0); showOverall(); }
 
-// 総合判定
 function calcGrade() {
   let p = 0;
   if(amsTotal>49)p+=3; else if(amsTotal>36)p+=2; else if(amsTotal>26)p+=1;
@@ -538,26 +517,33 @@ async function showOverall() {
   if (saveData.id) savedScoreId = saveData.id;
 
   setTimeout(()=>{
-    document.getElementById('r-ams-score').textContent=amsTotal;
-    const rj=document.getElementById('r-ams-judge');
-    rj.textContent=amsJudge;rj.className='result-judge '+(amsTotal<=26?'judge-none':amsTotal<=36?'judge-mild':amsTotal<=49?'judge-moderate':'judge-severe');
-    const aj=document.getElementById('r-adam-judge');
-    aj.textContent=adamPositive?'陽性':'陰性';aj.className='result-judge '+(adamPositive?'judge-positive':'judge-negative');
-    document.getElementById('r-jamq-score').textContent=jamqTotal;
-    const qj=document.getElementById('r-jamq-judge');
-    qj.textContent=jJudge.text;qj.className='result-judge '+jJudge.cls;
-    const ge=document.getElementById('overall-grade');
-    ge.textContent=grade;ge.className='overall-grade grade-'+grade;
-    document.getElementById('overall-label').textContent=gradeLabels[grade];
-    document.getElementById('overall-comment').textContent=gradeComments[grade];
+    document.getElementById('r-ams-score').textContent = amsTotal;
+    const rj = document.getElementById('r-ams-judge');
+    rj.textContent = amsJudge;
+    rj.className = 'result-judge ' + (amsTotal<=26?'judge-none':amsTotal<=36?'judge-mild':amsTotal<=49?'judge-moderate':'judge-severe');
+
+    const aj = document.getElementById('r-adam-judge');
+    aj.textContent = adamPositive ? '陽性' : '陰性';
+    aj.className = 'result-judge ' + (adamPositive ? 'judge-positive' : 'judge-negative');
+
+    document.getElementById('r-jamq-score').textContent = jamqTotal;
+    const qj = document.getElementById('r-jamq-judge');
+    qj.textContent = jJudge.text;
+    qj.className = 'result-judge ' + jJudge.cls;
+
+    const ge = document.getElementById('overall-grade');
+    ge.textContent = grade;
+    ge.className = 'overall-grade grade-' + grade;
+    document.getElementById('overall-label').textContent = gradeLabels[grade];
+    document.getElementById('overall-comment').textContent = gradeComments[grade];
     showScreen('screen-overall');
-  },1500);
+  }, 1500);
 }
 
 document.getElementById('start-btn').addEventListener('click', checkAgeAndStart);
 document.getElementById('line-login-btn').addEventListener('click', lineLogin);
 document.getElementById('skip-btn').addEventListener('click', checkAgeAndStart);
-document.getElementById('retry-btn').addEventListener('click', ()=>location.reload());
+document.getElementById('retry-btn').addEventListener('click', () => location.reload());
 
 document.getElementById('copy-url-btn').addEventListener('click', () => {
   if (!savedScoreId) { alert('結果の保存が完了していません。'); return; }
